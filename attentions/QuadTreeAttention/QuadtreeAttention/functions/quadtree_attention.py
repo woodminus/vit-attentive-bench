@@ -5,4 +5,8 @@ import value_aggregation_cuda
 from einops.einops import rearrange
 
 
-class Sc
+class ScoreComputation(Function):
+    @staticmethod
+    def forward(ctx, query, key, index):
+        x = score_computation_cuda.score_forward(query, key, index)
+        ctx.save_for_backward(que
