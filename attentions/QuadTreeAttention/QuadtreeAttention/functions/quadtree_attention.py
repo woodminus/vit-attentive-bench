@@ -34,4 +34,10 @@ class value_aggregation(Function):
         D = value.shape[-1]
         # value [b, M, H, D]
         output = score.new_zeros([b, N, H, D]).contiguous()  # b, 4N, H, D
-        value_aggregation_cuda.value_aggregation_forward(score, val
+        value_aggregation_cuda.value_aggregation_forward(score, value, index, output)
+        output = rearrange(output, "b (n f) h d -> b n f h d", f=f)
+        return output
+
+    @staticmethod
+    def backward(ctx, grad_output):
+        score, value
