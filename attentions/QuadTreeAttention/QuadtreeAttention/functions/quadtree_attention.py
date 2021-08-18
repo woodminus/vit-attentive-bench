@@ -25,4 +25,7 @@ score_computation_op = ScoreComputation.apply
 
 class value_aggregation(Function):
     @staticmethod
- 
+    def forward(ctx, score, value, index):
+        ctx.save_for_backward(score, value, index)
+        f = score.shape[2]
+        score = rearrange(score, "b n f K h -> b (n f) K h")  # [
