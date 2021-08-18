@@ -28,4 +28,7 @@ class value_aggregation(Function):
     def forward(ctx, score, value, index):
         ctx.save_for_backward(score, value, index)
         f = score.shape[2]
-        score = rearrange(score, "b n f K h -> b (n f) K h")  # [
+        score = rearrange(score, "b n f K h -> b (n f) K h")  # [b, N, 4, 4K, H] -> [b, 4N, 4K, H]
+        index = rearrange(index, "b n f K h -> b (n f) K h")  # [b, N, 4, 4K, H] -> [b, 4N, 4K, H]
+        b, N, _, H = score.shape
+        D = value.shape[
