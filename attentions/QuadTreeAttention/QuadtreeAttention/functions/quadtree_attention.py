@@ -15,4 +15,14 @@ class ScoreComputation(Function):
     @staticmethod
     def backward(ctx, grad_output):
         input1, input2, index = ctx.saved_tensors
-        grad_output = grad_output.contiguous
+        grad_output = grad_output.contiguous()
+        x = score_computation_cuda.score_backward(grad_output, input1, input2, index)
+        return x[0], x[1], None
+
+
+score_computation_op = ScoreComputation.apply
+
+
+class value_aggregation(Function):
+    @staticmethod
+ 
