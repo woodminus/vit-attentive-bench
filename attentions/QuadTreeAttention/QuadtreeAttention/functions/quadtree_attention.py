@@ -40,4 +40,9 @@ class value_aggregation(Function):
 
     @staticmethod
     def backward(ctx, grad_output):
-        score, value
+        score, value, index = ctx.saved_tensors
+        f = score.shape[2]
+        score = rearrange(score, "b n f K h -> b (n f) K h")
+        index = rearrange(index, "b n f K h -> b (n f) K h")
+
+        grad_ou
