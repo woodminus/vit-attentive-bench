@@ -31,4 +31,7 @@ class value_aggregation(Function):
         score = rearrange(score, "b n f K h -> b (n f) K h")  # [b, N, 4, 4K, H] -> [b, 4N, 4K, H]
         index = rearrange(index, "b n f K h -> b (n f) K h")  # [b, N, 4, 4K, H] -> [b, 4N, 4K, H]
         b, N, _, H = score.shape
-        D = value.shape[
+        D = value.shape[-1]
+        # value [b, M, H, D]
+        output = score.new_zeros([b, N, H, D]).contiguous()  # b, 4N, H, D
+        value_aggregation_cuda.value_aggregation_forward(score, val
