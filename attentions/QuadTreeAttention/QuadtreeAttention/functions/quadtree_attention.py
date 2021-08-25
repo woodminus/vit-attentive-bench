@@ -50,4 +50,6 @@ class value_aggregation(Function):
         grad_score = score.new_zeros(score.shape).contiguous()
         grad_value = value.new_zeros(value.shape).contiguous()
 
-        value_aggregation_cuda.v
+        value_aggregation_cuda.value_aggregation_backward(grad_output, score, value, index, grad_score, grad_value)
+        grad_score = rearrange(grad_score, "b (n f) K h -> b n f K h", f=f)
+        return grad_s
