@@ -13,4 +13,11 @@
 #define THREADS_PER_WARP 32
 #define MAX_H 8
 
-#define CUDA_KERNEL_LOOP(i, n) fo
+#define CUDA_KERNEL_LOOP(i, n) for (int i = blockIdx.x * blockDim.x + threadIdx.x; i < (n); i += blockDim.x * gridDim.x)
+
+#define GET_BLOCKS(n, t) (n+t-1) / t
+
+
+template <typename scalar_t>
+__global__ void ScoreData(
+  
