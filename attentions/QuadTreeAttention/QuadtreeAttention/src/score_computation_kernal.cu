@@ -20,4 +20,5 @@
 
 template <typename scalar_t>
 __global__ void ScoreData(
-  
+  torch::PackedTensorAccessor32<scalar_t,5,torch::RestrictPtrTraits> query, // B, N1, 4, H, dim
+  torch::PackedTensorAccessor32<scalar_t,4,torch::RestrictPtrTraits> key, //B, N2, H, d
