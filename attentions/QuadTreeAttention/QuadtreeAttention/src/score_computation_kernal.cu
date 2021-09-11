@@ -24,4 +24,14 @@ __global__ void ScoreData(
   torch::PackedTensorAccessor32<scalar_t,4,torch::RestrictPtrTraits> key, //B, N2, H, dim
   torch::PackedTensorAccessor32<long,4,torch::RestrictPtrTraits> index, //B, N1, K*4, H
   torch::PackedTensorAccessor32<scalar_t,5,torch::RestrictPtrTraits> output //B, N1, 4, K*4, H
- 
+  ){
+  extern __shared__ char patch_data_char[];
+  
+  scalar_t *feat1_data = (scalar_t *)patch_data_char;
+
+
+  int b = blockIdx.x;
+  int n1 = blockIdx.y;
+  int f = blockIdx.z;
+  
+  int ch_off = t
