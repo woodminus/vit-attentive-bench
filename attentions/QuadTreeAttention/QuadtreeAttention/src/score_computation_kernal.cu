@@ -34,4 +34,10 @@ __global__ void ScoreData(
   int n1 = blockIdx.y;
   int f = blockIdx.z;
   
-  int ch_off = t
+  int ch_off = threadIdx.x;
+  
+  int D=query.size(4);
+  int HD=query.size(3)*D;
+  int K=index.size(2);
+  for(int ch = ch_off; ch < HD; ch += (WARPS_PER_BLOCK*THREADS_PER_WARP)) { // CHANNELS
+    fea
