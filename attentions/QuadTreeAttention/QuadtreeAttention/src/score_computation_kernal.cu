@@ -62,4 +62,10 @@ __global__ void ScoreData(
 }
 
 
-std::vector<torch::Tensor> ScoreData_ong
+std::vector<torch::Tensor> ScoreData_ongpu(torch::Tensor query, // B, N1, 4, H, dim
+  torch::Tensor key, // B, N2, H, dim
+  torch::Tensor index) // B, N1, K, 4, H
+{
+
+    const auto B = query.size(0);
+    const auto N1 = query.
