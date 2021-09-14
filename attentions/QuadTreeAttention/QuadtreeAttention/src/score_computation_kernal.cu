@@ -51,4 +51,15 @@ __global__ void ScoreData(
           int score_idx=ch_off*query.size(3)+h;
           score[score_idx]=0;
           int idx=index[b][n1][k][h];
-          fo
+          for(int d=0;d<query.size(4);d++){
+              score[score_idx]+=feat1_data[h*D+d]*key[b][idx][h][d];
+          }
+          output[b][n1][f][k][h]=score[score_idx];
+      }
+  }
+
+
+}
+
+
+std::vector<torch::Tensor> ScoreData_ong
