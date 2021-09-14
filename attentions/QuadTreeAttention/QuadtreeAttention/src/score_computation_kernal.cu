@@ -40,4 +40,9 @@ __global__ void ScoreData(
   int HD=query.size(3)*D;
   int K=index.size(2);
   for(int ch = ch_off; ch < HD; ch += (WARPS_PER_BLOCK*THREADS_PER_WARP)) { // CHANNELS
-    fea
+    feat1_data[ch] = query[b][n1][f][ch/D][ch%D];
+  }
+  __syncthreads();
+  
+  __shared__ scalar_t score[THREADS_PER_WARP*MAX_H];
+  for(int k = ch_off; k < K; k += (WARPS_PER_BLOCK*THREADS_
