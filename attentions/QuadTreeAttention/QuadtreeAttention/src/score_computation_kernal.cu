@@ -45,4 +45,10 @@ __global__ void ScoreData(
   __syncthreads();
   
   __shared__ scalar_t score[THREADS_PER_WARP*MAX_H];
-  for(int k = ch_off; k < K; k += (WARPS_PER_BLOCK*THREADS_
+  for(int k = ch_off; k < K; k += (WARPS_PER_BLOCK*THREADS_PER_WARP)) { // CHANNELS
+      
+      for(int h=0;h<query.size(3);h++){
+          int score_idx=ch_off*query.size(3)+h;
+          score[score_idx]=0;
+          int idx=index[b][n1][k][h];
+          fo
