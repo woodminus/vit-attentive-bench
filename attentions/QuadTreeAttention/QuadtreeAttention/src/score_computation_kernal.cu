@@ -74,4 +74,10 @@ std::vector<torch::Tensor> ScoreData_ongpu(torch::Tensor query, // B, N1, 4, H, 
     const auto K = index.size(-2);
 
 
-    auto output = torch::zeros({B, N1, 4, K, H},torch::device(tor
+    auto output = torch::zeros({B, N1, 4, K, H},torch::device(torch::kCUDA));
+    
+    int shared_memory_per_block = H*D;
+    
+    dim3 totalBlocks(B, N1, 4);
+    dim3 threadsPerBlock(THREADS_PER_WARP);
+    AT_DISPATCH_FLOATING_TYPES(query.type(), "ScoreData_ongpu"
