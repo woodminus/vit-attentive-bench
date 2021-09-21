@@ -68,4 +68,10 @@ std::vector<torch::Tensor> ScoreData_ongpu(torch::Tensor query, // B, N1, 4, H, 
 {
 
     const auto B = query.size(0);
-    const auto N1 = query.
+    const auto N1 = query.size(1);
+    const auto H = query.size(3);
+    const auto D = query.size(4);
+    const auto K = index.size(-2);
+
+
+    auto output = torch::zeros({B, N1, 4, K, H},torch::device(tor
