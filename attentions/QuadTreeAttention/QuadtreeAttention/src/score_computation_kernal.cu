@@ -85,4 +85,12 @@ std::vector<torch::Tensor> ScoreData_ongpu(torch::Tensor query, // B, N1, 4, H, 
           query.packed_accessor32<scalar_t,5,torch::RestrictPtrTraits>(),
           key.packed_accessor32<scalar_t,4,torch::RestrictPtrTraits>(),
           index.packed_accessor32<long,4,torch::RestrictPtrTraits>(),
-          output.packed_accessor32<scalar_t,
+          output.packed_accessor32<scalar_t,5,torch::RestrictPtrTraits>());
+    }));
+  return {output};
+
+}
+
+template <typename scalar_t>
+__global__ void ScoreDataBackward(
+  torch::PackedTensorAccessor32<scalar_t,5,torch::Restri
