@@ -93,4 +93,6 @@ std::vector<torch::Tensor> ScoreData_ongpu(torch::Tensor query, // B, N1, 4, H, 
 
 template <typename scalar_t>
 __global__ void ScoreDataBackward(
-  torch::PackedTensorAccessor32<scalar_t,5,torch::Restri
+  torch::PackedTensorAccessor32<scalar_t,5,torch::RestrictPtrTraits> grad, //B, N1, 4, K*4, H
+  torch::PackedTensorAccessor32<scalar_t,5,torch::RestrictPtrTraits> query, //B, N1, 4, H, dim
+  torch::PackedTensorAccessor32<scalar_t,4,torch::RestrictPt
