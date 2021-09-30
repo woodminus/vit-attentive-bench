@@ -95,4 +95,6 @@ template <typename scalar_t>
 __global__ void ScoreDataBackward(
   torch::PackedTensorAccessor32<scalar_t,5,torch::RestrictPtrTraits> grad, //B, N1, 4, K*4, H
   torch::PackedTensorAccessor32<scalar_t,5,torch::RestrictPtrTraits> query, //B, N1, 4, H, dim
-  torch::PackedTensorAccessor32<scalar_t,4,torch::RestrictPt
+  torch::PackedTensorAccessor32<scalar_t,4,torch::RestrictPtrTraits> key, // B, N2, H, dim
+  torch::PackedTensorAccessor32<long,4,torch::RestrictPtrTraits> index,// B, N1, K*4, H
+  torch::PackedTensorAccessor32<scalar_t,5,torch::RestrictPtrTraits> 
