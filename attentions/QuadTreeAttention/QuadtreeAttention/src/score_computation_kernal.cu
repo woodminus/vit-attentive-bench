@@ -104,4 +104,14 @@ __global__ void ScoreDataBackward(
   int n1 = blockIdx.y;
   int f = blockIdx.z;
   
-  extern _
+  extern __shared__ char patch_data_char[];
+  
+  
+  int ch_off = threadIdx.x;
+  
+  int D=query.size(4);
+  int H=query.size(3);
+  int HD=H*D;
+  int K=index.size(2);
+  
+  scalar_t *query_data = (scalar_t *)patc
