@@ -114,4 +114,9 @@ __global__ void ScoreDataBackward(
   int HD=H*D;
   int K=index.size(2);
   
-  scalar_t *query_data = (scalar_t *)patc
+  scalar_t *query_data = (scalar_t *)patch_data_char;
+
+  scalar_t *grad_data = (scalar_t *) (HD*sizeof(scalar_t)+patch_data_char);
+
+
+  for(int ch = ch_off; ch <HD; ch += (WARPS_PER_BLOCK*THREADS_PER_WARP)) { // CHANNEL
