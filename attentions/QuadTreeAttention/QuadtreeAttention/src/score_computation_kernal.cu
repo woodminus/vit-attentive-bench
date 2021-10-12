@@ -123,4 +123,11 @@ __global__ void ScoreDataBackward(
     query_data[ch] = query[b][n1][f][ch/D][ch%D];
   }
   for(int ch = ch_off; ch <K*H; ch += (WARPS_PER_BLOCK*THREADS_PER_WARP)) { // CHANNELS
-    grad_data[ch] = gra
+    grad_data[ch] = grad[b][n1][f][ch/H][ch%H];
+  }
+  __syncthreads();
+  
+   for(int k = ch_off; k < K; k += (WARPS_PER_BLOCK*THREADS_PER_WARP)) { // CHANNELS
+      
+      for(int h=0;h<H;h++){   
+          int
