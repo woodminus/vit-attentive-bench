@@ -130,4 +130,8 @@ __global__ void ScoreDataBackward(
    for(int k = ch_off; k < K; k += (WARPS_PER_BLOCK*THREADS_PER_WARP)) { // CHANNELS
       
       for(int h=0;h<H;h++){   
-          int
+          int idx=index[b][n1][k][h];
+          for(int d=0;d<D;d++){
+              
+              atomicAdd(&query_grad[b][n1][f][h][d], grad_data[k*H+h]*key[b][idx][h][d]);
+              atomicA
