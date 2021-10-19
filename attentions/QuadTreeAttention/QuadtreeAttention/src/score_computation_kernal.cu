@@ -154,4 +154,10 @@ std::vector<torch::Tensor> ScoreData_backward_ongpu(torch::Tensor grad_output1, 
     const auto N2 = key.size(1);
     const auto K = grad_output1.size(3);
     const auto H = key.size(2);
-    const 
+    const auto D = key.size(3);
+
+
+    auto query_grad = torch::zeros({B, N1, 4, H, D},torch::device(torch::kCUDA));
+    
+    auto key_grad = torch::zeros({B, N2, H, D},torch::device(torch::kCUDA));
+    
