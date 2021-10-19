@@ -149,4 +149,9 @@ std::vector<torch::Tensor> ScoreData_backward_ongpu(torch::Tensor grad_output1, 
 
 {
 
-    con
+    const auto B = grad_output1.size(0);
+    const auto N1 = grad_output1.size(1);
+    const auto N2 = key.size(1);
+    const auto K = grad_output1.size(3);
+    const auto H = key.size(2);
+    const 
