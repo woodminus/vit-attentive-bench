@@ -168,4 +168,6 @@ std::vector<torch::Tensor> ScoreData_backward_ongpu(torch::Tensor grad_output1, 
     dim3 threadsPerBlock(THREADS_PER_WARP);
     
     
-    AT_DISPATCH_FLOATING_
+    AT_DISPATCH_FLOATING_TYPES(key.type(), "ScoreDatabackward_ongpu", ([&] {
+      ScoreDataBackward<scalar_t><<<totalBlocks, threadsPerBlock, shared_memory_per_block * sizeof(scalar_t)>>>(
+          grad_output1.packed_accessor32<scalar_t,5,torch::
