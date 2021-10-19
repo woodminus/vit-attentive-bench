@@ -134,4 +134,12 @@ __global__ void ScoreDataBackward(
           for(int d=0;d<D;d++){
               
               atomicAdd(&query_grad[b][n1][f][h][d], grad_data[k*H+h]*key[b][idx][h][d]);
-              atomicA
+              atomicAdd(&key_grad[b][idx][h][d],grad_data[k*H+h]*query_data[h*D+d]);
+          }
+          
+      }
+  }
+  
+}
+
+std::vector<torch::Tensor> ScoreData_backward_ongpu(torch::Tensor grad_output1, //B
