@@ -161,3 +161,11 @@ std::vector<torch::Tensor> ScoreData_backward_ongpu(torch::Tensor grad_output1, 
     
     auto key_grad = torch::zeros({B, N2, H, D},torch::device(torch::kCUDA));
     
+    
+    int shared_memory_per_block = H*D+K*H;
+   
+    dim3 totalBlocks(B, N1, 4);
+    dim3 threadsPerBlock(THREADS_PER_WARP);
+    
+    
+    AT_DISPATCH_FLOATING_
