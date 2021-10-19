@@ -142,4 +142,11 @@ __global__ void ScoreDataBackward(
   
 }
 
-std::vector<torch::Tensor> ScoreData_backward_ongpu(torch::Tensor grad_output1, //B
+std::vector<torch::Tensor> ScoreData_backward_ongpu(torch::Tensor grad_output1, //B, N1, 4, K*4, H
+                      torch::Tensor query, //B, N1, 4, H, dim
+                      torch::Tensor key, //B, N2, H, dim
+                      torch::Tensor index) //B, N1, K*4, H
+
+{
+
+    con
