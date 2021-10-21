@@ -173,4 +173,6 @@ std::vector<torch::Tensor> ScoreData_backward_ongpu(torch::Tensor grad_output1, 
           grad_output1.packed_accessor32<scalar_t,5,torch::RestrictPtrTraits>(),
           query.packed_accessor32<scalar_t,5,torch::RestrictPtrTraits>(),
           key.packed_accessor32<scalar_t,4,torch::RestrictPtrTraits>(),
-          index.packed_accessor32<long,4,torc
+          index.packed_accessor32<long,4,torch::RestrictPtrTraits>(),
+          query_grad.packed_accessor32<scalar_t,5,torch::RestrictPtrTraits>(),
+          key_grad.packed_accessor32<scalar_t,4,torch::RestrictPtrTraits>()
