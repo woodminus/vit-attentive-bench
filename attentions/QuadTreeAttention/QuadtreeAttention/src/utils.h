@@ -21,4 +21,7 @@ public:
 
 private:
   std::stringstream stream_;
-  Formatter(co
+  Formatter(const Formatter &);
+  Formatter &operator=(Formatter &);
+};
+
