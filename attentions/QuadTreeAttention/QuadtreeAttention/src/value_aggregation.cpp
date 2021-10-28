@@ -8,4 +8,11 @@ extern THCState *state;
 
 void value_aggregation_cuda_forward(
                     at::Tensor score, // B, N, K, H
-                    at::Tensor value, // B, M, 
+                    at::Tensor value, // B, M, H, D
+                    at::Tensor index, // B, N, K, H
+                    at::Tensor output)// B, N, H, D
+{
+    CHECK_INPUT(score);
+    CHECK_INPUT(value);
+    CHECK_INPUT(index);
+    auto score_size = 
