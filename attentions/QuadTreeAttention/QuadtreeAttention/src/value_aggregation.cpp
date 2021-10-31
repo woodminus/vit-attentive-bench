@@ -21,4 +21,10 @@ void value_aggregation_cuda_forward(
     int N = score_size[1];
     int K = score_size[2];
     int H = score_size[3];
-    int M = value
+    int M = value_size[1];
+    int D = value_size[3];
+
+
+    value_aggregation_forward_kernel(score.data<float>(), value.data<float>(),
+        index.data<long>(), output.data<float>(), B, N, K, H, M, D,
+        at::c
