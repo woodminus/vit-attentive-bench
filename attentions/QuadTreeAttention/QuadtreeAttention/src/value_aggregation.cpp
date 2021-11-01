@@ -27,4 +27,10 @@ void value_aggregation_cuda_forward(
 
     value_aggregation_forward_kernel(score.data<float>(), value.data<float>(),
         index.data<long>(), output.data<float>(), B, N, K, H, M, D,
-        at::c
+        at::cuda::getCurrentCUDAStream());
+}
+
+void value_aggregation_cuda_backward(
+                    at::Tensor grad_output, // B, N, H, D
+                    at::Tensor score, // B, N, K, H
+         
