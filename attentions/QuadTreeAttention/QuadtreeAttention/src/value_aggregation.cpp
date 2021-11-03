@@ -33,4 +33,7 @@ void value_aggregation_cuda_forward(
 void value_aggregation_cuda_backward(
                     at::Tensor grad_output, // B, N, H, D
                     at::Tensor score, // B, N, K, H
-         
+                    at::Tensor value, // B, M, H, D
+                    at::Tensor index, // B, N, K, H
+                    at::Tensor grad_score, // B, N, K, H
+                    at::Tensor grad_value /
