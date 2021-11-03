@@ -36,4 +36,12 @@ void value_aggregation_cuda_backward(
                     at::Tensor value, // B, M, H, D
                     at::Tensor index, // B, N, K, H
                     at::Tensor grad_score, // B, N, K, H
-                    at::Tensor grad_value /
+                    at::Tensor grad_value // B, M, H, D
+                    )
+{
+    CHECK_INPUT(score);
+    CHECK_INPUT(value);
+    CHECK_INPUT(index);
+    CHECK_INPUT(grad_output);
+
+    auto score_size = score.sizes();
