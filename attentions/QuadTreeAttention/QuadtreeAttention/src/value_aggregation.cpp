@@ -45,3 +45,10 @@ void value_aggregation_cuda_backward(
     CHECK_INPUT(grad_output);
 
     auto score_size = score.sizes();
+    auto value_size = value.sizes();
+    int B = score_size[0];
+    int N = score_size[1];
+    int K = score_size[2];
+    int H = score_size[3];
+    int M = value_size[1];
+    int D
