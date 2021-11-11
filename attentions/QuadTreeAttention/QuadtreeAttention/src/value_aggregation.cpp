@@ -51,4 +51,8 @@ void value_aggregation_cuda_backward(
     int K = score_size[2];
     int H = score_size[3];
     int M = value_size[1];
-    int D
+    int D = value_size[3];
+
+
+    value_aggregation_backward_kernel(grad_output.data<float>(), score.data<float>(), 
+        value.data<float>(), index.data<long>(), grad_score.data<float>(), grad_valu
