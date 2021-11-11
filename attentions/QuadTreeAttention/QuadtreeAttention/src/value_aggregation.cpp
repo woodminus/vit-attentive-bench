@@ -55,4 +55,9 @@ void value_aggregation_cuda_backward(
 
 
     value_aggregation_backward_kernel(grad_output.data<float>(), score.data<float>(), 
-        value.data<float>(), index.data<long>(), grad_score.data<float>(), grad_valu
+        value.data<float>(), index.data<long>(), grad_score.data<float>(), grad_value.data<float>(), 
+        B, N, K, H, M, D, at::cuda::getCurrentCUDAStream());
+}
+
+PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
+  m.def("value_aggregation_forward", &value_aggregation_cuda_forward, "va
