@@ -31,4 +31,7 @@ __global__ void ValueAggregationForwardFunc(float* score, float* value, long* in
         long value_start_idx = b_idx * M * H * D + h_idx * D + d_idx;
         
         float out_val = 0;
-        for(int k_idx = 0; k_idx < K; 
+        for(int k_idx = 0; k_idx < K; k_idx++){
+            int score_idx = score_start_idx + k_idx * H;
+            int value_idx = value_start_idx + index[score_idx] * H * D;
+            out_val += score[score_idx] * value[v
