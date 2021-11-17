@@ -14,4 +14,8 @@
 #define WARPS_PER_BLOCK 1
 #define THREADS_PER_WARP 32
 
-#define CUDA_KERNEL_LOOP(i, n) for (int i = blockIdx.x * blockDim.x + threadIdx.x; i < (n); i += blockDim.
+#define CUDA_KERNEL_LOOP(i, n) for (int i = blockIdx.x * blockDim.x + threadIdx.x; i < (n); i += blockDim.x * gridDim.x)
+
+#define GET_BLOCKS(n, t) (n+t-1) / t
+
+__global__ void ValueAggregationForwardFunc(float* score, float* value, long* index, float* output, int B, int N, int K, int H, int M, int D) {
