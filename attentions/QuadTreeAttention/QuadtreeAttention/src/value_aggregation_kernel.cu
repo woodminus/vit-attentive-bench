@@ -34,4 +34,12 @@ __global__ void ValueAggregationForwardFunc(float* score, float* value, long* in
         for(int k_idx = 0; k_idx < K; k_idx++){
             int score_idx = score_start_idx + k_idx * H;
             int value_idx = value_start_idx + index[score_idx] * H * D;
-            out_val += score[score_idx] * value[v
+            out_val += score[score_idx] * value[value_idx];
+        }
+        output[cur_idx] = out_val;
+      }
+  }
+}
+
+
+void value_aggregation_forward_kernel(float* score, float* value, long* index, float* ouput, int B, int N, int K, int H, int M, int D
