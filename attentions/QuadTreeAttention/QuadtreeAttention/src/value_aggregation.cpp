@@ -60,4 +60,6 @@ void value_aggregation_cuda_backward(
 }
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
-  m.def("value_aggregation_forward", &value_aggregation_cuda_forward, "va
+  m.def("value_aggregation_forward", &value_aggregation_cuda_forward, "value forward (CUDA)");
+  m.def("value_aggregation_backward", &value_aggregation_cuda_backward, "value backward (CUDA)");
+}
