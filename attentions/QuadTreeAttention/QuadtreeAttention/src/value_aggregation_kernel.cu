@@ -10,4 +10,8 @@
 
 #define ROUND_OFF 50000
 
-#define CUDA_NUM_THREADS 
+#define CUDA_NUM_THREADS 1024
+#define WARPS_PER_BLOCK 1
+#define THREADS_PER_WARP 32
+
+#define CUDA_KERNEL_LOOP(i, n) for (int i = blockIdx.x * blockDim.x + threadIdx.x; i < (n); i += blockDim.
