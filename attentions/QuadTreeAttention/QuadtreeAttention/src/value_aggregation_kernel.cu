@@ -19,3 +19,9 @@
 #define GET_BLOCKS(n, t) (n+t-1) / t
 
 __global__ void ValueAggregationForwardFunc(float* score, float* value, long* index, float* output, int B, int N, int K, int H, int M, int D) {
+  ///*
+  long LENGTH = B*N*H*D;
+  CUDA_KERNEL_LOOP(cur_idx, LENGTH){
+      long d_idx = cur_idx % D; 
+      long h_idx = (cur_idx - d_idx) / D % H; 
+      long n_idx = (cur_idx
