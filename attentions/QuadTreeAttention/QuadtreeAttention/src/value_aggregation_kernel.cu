@@ -24,4 +24,7 @@ __global__ void ValueAggregationForwardFunc(float* score, float* value, long* in
   CUDA_KERNEL_LOOP(cur_idx, LENGTH){
       long d_idx = cur_idx % D; 
       long h_idx = (cur_idx - d_idx) / D % H; 
-      long n_idx = (cur_idx
+      long n_idx = (cur_idx - d_idx - h_idx * D) / D / H % N;
+      long b_idx = (cur_idx - d_idx - h_idx * D - n_idx * H * D) / D / H / N;
+      if (cur_idx < LENGTH) {
+        long score_start_i
