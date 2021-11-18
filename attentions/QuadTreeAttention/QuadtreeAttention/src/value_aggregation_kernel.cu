@@ -42,4 +42,8 @@ __global__ void ValueAggregationForwardFunc(float* score, float* value, long* in
 }
 
 
-void value_aggregation_forward_kernel(float* score, float* value, long* index, float* ouput, int B, int N, int K, int H, int M, int D
+void value_aggregation_forward_kernel(float* score, float* value, long* index, float* ouput, int B, int N, int K, int H, int M, int D, cudaStream_t stream){
+  ValueAggregationForwardFunc
+    <<<GET_BLOCKS(B*N*H*D, CUDA_NUM_THREADS), CUDA_NUM_THREADS, 0, stream>>>(score, value, index, ouput, B, N, K, H, M, D);
+
+  cudaEr
