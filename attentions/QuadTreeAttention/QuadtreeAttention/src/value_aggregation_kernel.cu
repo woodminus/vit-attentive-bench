@@ -46,4 +46,10 @@ void value_aggregation_forward_kernel(float* score, float* value, long* index, f
   ValueAggregationForwardFunc
     <<<GET_BLOCKS(B*N*H*D, CUDA_NUM_THREADS), CUDA_NUM_THREADS, 0, stream>>>(score, value, index, ouput, B, N, K, H, M, D);
 
-  cudaEr
+  cudaError_t err = cudaGetLastError();
+  if (cudaSuccess != err)
+    throw std::runtime_error(Formatter()
+                             << "CUDA kernel failed : " << std::to_string(err));    
+}
+
+__global__ void Value
