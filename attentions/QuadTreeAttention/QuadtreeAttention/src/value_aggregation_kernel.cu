@@ -52,4 +52,6 @@ void value_aggregation_forward_kernel(float* score, float* value, long* index, f
                              << "CUDA kernel failed : " << std::to_string(err));    
 }
 
-__global__ void Value
+__global__ void ValueAggregationBackwardFunc(float* grad_output, float* score, float* value, long* index, float* grad_score,
+         float* grad_value, int B, int N, int K, int H, int M, int D) {
+  long LENGT
