@@ -54,4 +54,8 @@ void value_aggregation_forward_kernel(float* score, float* value, long* index, f
 
 __global__ void ValueAggregationBackwardFunc(float* grad_output, float* score, float* value, long* index, float* grad_score,
          float* grad_value, int B, int N, int K, int H, int M, int D) {
-  long LENGT
+  long LENGTH = B*N*K*H;
+  CUDA_KERNEL_LOOP(cur_idx, LENGTH){
+      long h_idx = cur_idx % H;
+      long k_idx = (cur_idx - h_idx) / H % K;
+      long n_idx = (cur_idx - h_idx - k_idx * H) / H
