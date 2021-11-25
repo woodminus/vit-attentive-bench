@@ -63,3 +63,7 @@ __global__ void ValueAggregationBackwardFunc(float* grad_output, float* score, f
 
       if (cur_idx < LENGTH) {
         long output_start_idx = b_idx * N * H * D + n_idx * H * D + h_idx * D;
+        long value_start_idx = b_idx * M * H * D + h_idx * D;
+        for (int d_idx = 0; d_idx < D; d_idx ++){
+            long output_idx = output_start_idx + d_idx;
+            long value_idx = value_start_idx + index[cur_idx
