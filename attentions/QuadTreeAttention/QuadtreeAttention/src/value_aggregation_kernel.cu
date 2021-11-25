@@ -58,4 +58,8 @@ __global__ void ValueAggregationBackwardFunc(float* grad_output, float* score, f
   CUDA_KERNEL_LOOP(cur_idx, LENGTH){
       long h_idx = cur_idx % H;
       long k_idx = (cur_idx - h_idx) / H % K;
-      long n_idx = (cur_idx - h_idx - k_idx * H) / H
+      long n_idx = (cur_idx - h_idx - k_idx * H) / H / K % N;
+      long b_idx = (cur_idx - h_idx - k_idx * H - n_idx * H * K) / H / K / N;
+
+      if (cur_idx < LENGTH) {
+        long output_start_idx = b_idx * N * H * D + n_idx * H * D + h_idx * D;
