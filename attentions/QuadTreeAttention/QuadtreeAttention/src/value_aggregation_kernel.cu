@@ -66,4 +66,7 @@ __global__ void ValueAggregationBackwardFunc(float* grad_output, float* score, f
         long value_start_idx = b_idx * M * H * D + h_idx * D;
         for (int d_idx = 0; d_idx < D; d_idx ++){
             long output_idx = output_start_idx + d_idx;
-            long value_idx = value_start_idx + index[cur_idx
+            long value_idx = value_start_idx + index[cur_idx] * H * D + d_idx;
+            auto grad_output_val = grad_output[output_idx];
+            grad_score[cur_idx] += grad_output_val * value[value_idx];
+            gpuAtomicAdd(&
