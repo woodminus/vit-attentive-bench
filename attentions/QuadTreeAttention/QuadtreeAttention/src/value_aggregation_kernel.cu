@@ -69,4 +69,10 @@ __global__ void ValueAggregationBackwardFunc(float* grad_output, float* score, f
             long value_idx = value_start_idx + index[cur_idx] * H * D + d_idx;
             auto grad_output_val = grad_output[output_idx];
             grad_score[cur_idx] += grad_output_val * value[value_idx];
-            gpuAtomicAdd(&
+            gpuAtomicAdd(&grad_value[value_idx], grad_output_val * score[cur_idx]);
+        }
+      }
+  }
+}
+
+void value_aggregation_backward_kernel(float* grad_output, float* score, float* value, long* index, float* grad_score, f
