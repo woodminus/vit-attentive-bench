@@ -75,4 +75,6 @@ __global__ void ValueAggregationBackwardFunc(float* grad_output, float* score, f
   }
 }
 
-void value_aggregation_backward_kernel(float* grad_output, float* score, float* value, long* index, float* grad_score, f
+void value_aggregation_backward_kernel(float* grad_output, float* score, float* value, long* index, float* grad_score, float* grad_value, int B, int N, int K, int H, int M, int D, cudaStream_t stream){
+  ValueAggregationBackwardFunc
+    <<<GET_BLOCKS(B*N*K*H, CUDA_NUM_THREADS), CUDA_NUM_THREADS, 0, stream>>>(grad_out
