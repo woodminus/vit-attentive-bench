@@ -82,4 +82,8 @@ void value_aggregation_backward_kernel(float* grad_output, float* score, float* 
   cudaError_t err = cudaGetLastError();
   if (cudaSuccess != err)
     throw std::runtime_error(Formatter()
- 
+                             << "CUDA kernel failed : " << std::to_string(err));    
+}
+
+
+        
