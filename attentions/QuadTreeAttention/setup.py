@@ -14,4 +14,10 @@ setup(
             "score_computation_cuda",
             [
                 "QuadtreeAttention/src/score_computation.cpp",
-                "QuadtreeAttention/src/score_comput
+                "QuadtreeAttention/src/score_computation_kernal.cu",
+            ],
+            extra_compile_args={"cxx": ["-g"], "nvcc": ["-O2"]},
+        ),
+        CUDAExtension(
+            "value_aggregation_cuda",
+            [
