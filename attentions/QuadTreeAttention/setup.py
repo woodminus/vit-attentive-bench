@@ -10,4 +10,8 @@ this_file = os.path.dirname(__file__)
 setup(
     name="quadtree_attention_package",
     ext_modules=[
-        CUDAE
+        CUDAExtension(
+            "score_computation_cuda",
+            [
+                "QuadtreeAttention/src/score_computation.cpp",
+                "QuadtreeAttention/src/score_comput
