@@ -21,3 +21,7 @@ setup(
         CUDAExtension(
             "value_aggregation_cuda",
             [
+                "QuadtreeAttention/src/value_aggregation.cpp", 
+                "QuadtreeAttention/src/value_aggregation_kernel.cu"
+            ],
+            extra_compile_args={"cxx": ["-g"], "
