@@ -24,4 +24,8 @@ setup(
                 "QuadtreeAttention/src/value_aggregation.cpp", 
                 "QuadtreeAttention/src/value_aggregation_kernel.cu"
             ],
-            extra_compile_args={"cxx": ["-g"], "
+            extra_compile_args={"cxx": ["-g"], "nvcc": ["-O2"]},
+        ),
+    ],
+    cmdclass={"build_ext": BuildExtension},
+)
