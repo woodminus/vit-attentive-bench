@@ -17,4 +17,10 @@ def img2windows(img, H_sp, W_sp):
     return img_perm
 
 
-def windows2im
+def windows2img(img_splits_hw, H_sp, W_sp, H, W):
+    """
+    img_splits_hw: B' H W C
+    """
+    B = int(img_splits_hw.shape[0] / (H * W / H_sp / W_sp))
+
+    img = img_splits_hw.view(B, H // H_sp
