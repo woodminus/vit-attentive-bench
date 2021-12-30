@@ -23,4 +23,9 @@ def windows2img(img_splits_hw, H_sp, W_sp, H, W):
     """
     B = int(img_splits_hw.shape[0] / (H * W / H_sp / W_sp))
 
-    img = img_splits_hw.view(B, H // H_sp
+    img = img_splits_hw.view(B, H // H_sp, W // W_sp, H_sp, W_sp, -1)
+    img = img.permute(0, 1, 3, 2, 4, 5).contiguous().view(B, H, W, -1)
+    return img
+
+class LePEAttention(nn.Module):
+    def __init__(self, dim, r
