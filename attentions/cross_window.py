@@ -32,4 +32,9 @@ class LePEAttention(nn.Module):
                  qk_scale=None):
         super().__init__()
         self.dim = dim
-        self.dim_o
+        self.dim_out = dim_out or dim
+        self.resolution = resolution
+        self.split_size = split_size
+        self.num_heads = num_heads
+        head_dim = dim // num_heads
+        self.head_dim = hea
