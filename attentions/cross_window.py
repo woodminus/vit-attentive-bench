@@ -37,4 +37,7 @@ class LePEAttention(nn.Module):
         self.split_size = split_size
         self.num_heads = num_heads
         head_dim = dim // num_heads
-        self.head_dim = hea
+        self.head_dim = head_dim
+        # NOTE scale factor was wrong in my original version, can set manually to be compat with prev weights
+        self.scale = qk_scale or head_dim ** -0.5
+      
