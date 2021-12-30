@@ -28,4 +28,8 @@ def windows2img(img_splits_hw, H_sp, W_sp, H, W):
     return img
 
 class LePEAttention(nn.Module):
-    def __init__(self, dim, r
+    def __init__(self, dim, resolution, idx, split_size=7, dim_out=None, num_heads=8, attn_drop=0., proj_drop=0.,
+                 qk_scale=None):
+        super().__init__()
+        self.dim = dim
+        self.dim_o
