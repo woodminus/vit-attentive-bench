@@ -45,4 +45,11 @@ class LePEAttention(nn.Module):
         elif idx == 0:
             H_sp, W_sp = self.resolution, self.split_size
         elif idx == 1:
-            
+            W_sp, H_sp = self.resolution, self.split_size
+        else:
+            print("ERROR MODE", idx)
+            exit(0)
+        self.H_sp = H_sp
+        self.W_sp = W_sp
+        stride = 1
+        self.get_
