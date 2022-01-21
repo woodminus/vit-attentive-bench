@@ -58,4 +58,7 @@ class LePEAttention(nn.Module):
 
     def im2cswin(self, x):
         B, N, C = x.shape
-        H = W 
+        H = W = int(np.sqrt(N))
+        x = x.transpose(-2, -1).contiguous().view(B, C, H, W)
+        x = img2windows(x, self.H_sp, self.W_sp)
+        x = x.reshape(-1, self.H_sp * self.W_sp, self.num_heads
