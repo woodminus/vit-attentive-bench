@@ -61,4 +61,10 @@ class LePEAttention(nn.Module):
         H = W = int(np.sqrt(N))
         x = x.transpose(-2, -1).contiguous().view(B, C, H, W)
         x = img2windows(x, self.H_sp, self.W_sp)
-        x = x.reshape(-1, self.H_sp * self.W_sp, self.num_heads
+        x = x.reshape(-1, self.H_sp * self.W_sp, self.num_heads, C // self.num_heads).permute(0, 2, 1, 3).contiguous()
+        return x
+
+    def get_lepe(self, x, func):
+        B, N, C = x.shape
+        H = W = int(np.sqrt(N))
+        x = x.transpose(-2, -1).conti
