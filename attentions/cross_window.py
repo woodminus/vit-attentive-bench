@@ -52,4 +52,10 @@ class LePEAttention(nn.Module):
         self.H_sp = H_sp
         self.W_sp = W_sp
         stride = 1
-        self.get_
+        self.get_v = nn.Conv2d(dim, dim, kernel_size=3, stride=1, padding=1, groups=dim)
+
+        self.attn_drop = nn.Dropout(attn_drop)
+
+    def im2cswin(self, x):
+        B, N, C = x.shape
+        H = W 
