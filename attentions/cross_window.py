@@ -71,4 +71,7 @@ class LePEAttention(nn.Module):
 
         H_sp, W_sp = self.H_sp, self.W_sp
         x = x.view(B, C, H // H_sp, H_sp, W // W_sp, W_sp)
-        x = x.permute(0, 2, 4,
+        x = x.permute(0, 2, 4, 1, 3, 5).contiguous().reshape(-1, C, H_sp, W_sp)  ### B', C, H', W'
+
+        lepe = func(x)  ### B', C, H', W'
+        lepe = lepe.reshape(-1, self.num_heads, C // self.num_he
