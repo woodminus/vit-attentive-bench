@@ -74,4 +74,7 @@ class LePEAttention(nn.Module):
         x = x.permute(0, 2, 4, 1, 3, 5).contiguous().reshape(-1, C, H_sp, W_sp)  ### B', C, H', W'
 
         lepe = func(x)  ### B', C, H', W'
-        lepe = lepe.reshape(-1, self.num_heads, C // self.num_he
+        lepe = lepe.reshape(-1, self.num_heads, C // self.num_heads, H_sp * W_sp).permute(0, 1, 3, 2).contiguous()
+
+        x = x.reshape(-1, self.num_heads, C // self.num_heads, self.H_sp * self.W_sp).permute(0, 1, 3, 2).contiguous()
+        ret
