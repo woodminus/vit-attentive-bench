@@ -67,4 +67,8 @@ class LePEAttention(nn.Module):
     def get_lepe(self, x, func):
         B, N, C = x.shape
         H = W = int(np.sqrt(N))
-        x = x.transpose(-2, -1).conti
+        x = x.transpose(-2, -1).contiguous().view(B, C, H, W)
+
+        H_sp, W_sp = self.H_sp, self.W_sp
+        x = x.view(B, C, H // H_sp, H_sp, W // W_sp, W_sp)
+        x = x.permute(0, 2, 4,
