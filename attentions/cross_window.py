@@ -77,4 +77,14 @@ class LePEAttention(nn.Module):
         lepe = lepe.reshape(-1, self.num_heads, C // self.num_heads, H_sp * W_sp).permute(0, 1, 3, 2).contiguous()
 
         x = x.reshape(-1, self.num_heads, C // self.num_heads, self.H_sp * self.W_sp).permute(0, 1, 3, 2).contiguous()
-        ret
+        return x, lepe
+
+    def forward(self, qkv):
+        """
+        x: B L C
+        """
+        q, k, v = qkv[0], qkv[1], qkv[2]
+
+        ### Img2Window
+        H = W = self.resolution
+        
