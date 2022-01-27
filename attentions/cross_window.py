@@ -87,4 +87,9 @@ class LePEAttention(nn.Module):
 
         ### Img2Window
         H = W = self.resolution
-        
+        B, L, C = q.shape
+        assert L == H * W, "flatten img_tokens has wrong size"
+
+        q = self.im2cswin(q)
+        k = self.im2cswin(k)
+        v, lepe = self.get_lepe(v, self.ge
