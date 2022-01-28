@@ -92,4 +92,9 @@ class LePEAttention(nn.Module):
 
         q = self.im2cswin(q)
         k = self.im2cswin(k)
-        v, lepe = self.get_lepe(v, self.ge
+        v, lepe = self.get_lepe(v, self.get_v)
+
+        q = q * self.scale
+        attn = (q @ k.transpose(-2, -1))  # B head N C @ B head C N --> B head N N
+        attn = nn.functional.softmax(attn, dim=-1, dtype=attn.dtype)
+    
