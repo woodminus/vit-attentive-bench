@@ -97,4 +97,9 @@ class LePEAttention(nn.Module):
         q = q * self.scale
         attn = (q @ k.transpose(-2, -1))  # B head N C @ B head C N --> B head N N
         attn = nn.functional.softmax(attn, dim=-1, dtype=attn.dtype)
-    
+        attn = self.attn_drop(attn)
+
+        x = (attn @ v) + lepe
+        x = x.transpose(1, 2).reshape(-1, self.H_sp * self.W_sp, C)  # B head N N @ B head N C
+
+        ### Window2I
