@@ -102,4 +102,14 @@ class LePEAttention(nn.Module):
         x = (attn @ v) + lepe
         x = x.transpose(1, 2).reshape(-1, self.H_sp * self.W_sp, C)  # B head N N @ B head N C
 
-        ### Window2I
+        ### Window2Img
+        x = windows2img(x, self.H_sp, self.W_sp, H, W).view(B, -1, C)  # B H' W' C
+
+        return x
+
+    def flops(self, H, W):
+        flops = 0
+        N = H * W
+        # q, k shape
+
+        #  
