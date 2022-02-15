@@ -113,4 +113,9 @@ class LePEAttention(nn.Module):
         # q, k shape
 
         #  v, lepe = self.get_lepe(v, self.get_v)
-        flops += conv_flops(H, W, self.get_v.in_channels, self.get_v.out_channels, kernel_size=self.get_v.kernel_size, stride=self.get_v.stride, padding=self
+        flops += conv_flops(H, W, self.get_v.in_channels, self.get_v.out_channels, kernel_size=self.get_v.kernel_size, stride=self.get_v.stride, padding=self.get_v.padding, groups=self.dim)
+
+        num_windows = (H // self.H_sp) * (W // self.W_sp)
+        num_tokes_per_windpow = self.H_sp * self.W_sp
+
+        # Q@K and attn@v
