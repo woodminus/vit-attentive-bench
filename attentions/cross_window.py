@@ -112,4 +112,5 @@ class LePEAttention(nn.Module):
         N = H * W
         # q, k shape
 
-        #  
+        #  v, lepe = self.get_lepe(v, self.get_v)
+        flops += conv_flops(H, W, self.get_v.in_channels, self.get_v.out_channels, kernel_size=self.get_v.kernel_size, stride=self.get_v.stride, padding=self
