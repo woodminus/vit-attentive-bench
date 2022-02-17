@@ -124,4 +124,7 @@ class LePEAttention(nn.Module):
         return flops
 
 class CrossWindowAttention(nn.Module):
-    def __init__(s
+    def __init__(self, dim, patch_resolution=14, branch_num=2, split_size=7, num_heads=8, attn_drop=0., proj_drop=0.,
+                 qk_scale=None, qkv_bias=True):
+        super().__init__()
+       
