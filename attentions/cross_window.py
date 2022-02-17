@@ -119,3 +119,9 @@ class LePEAttention(nn.Module):
         num_tokes_per_windpow = self.H_sp * self.W_sp
 
         # Q@K and attn@v
+        flops += num_windows * num_tokes_per_windpow * self.dim * num_tokes_per_windpow * 2
+
+        return flops
+
+class CrossWindowAttention(nn.Module):
+    def __init__(s
