@@ -132,4 +132,7 @@ class CrossWindowAttention(nn.Module):
         self.branch_num = branch_num
         self.qkv = nn.Linear(dim, dim * 3, bias=qkv_bias)
         self.attns = nn.ModuleList([
-                LePE
+                LePEAttention(
+                    dim//2, resolution=patch_resolution, idx = i,
+                    split_size=split_size, num_heads=num_heads//2, dim_out=dim//2,
+                    qk_scale=qk_s
