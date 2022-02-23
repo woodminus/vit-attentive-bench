@@ -155,4 +155,13 @@ class CrossWindowAttention(nn.Module):
         # qkv
         flops += N * self.dim * self.dim * 3
         # attention 1
-        flops += self.a
+        flops += self.attns[0].flops(H, W)
+        flops += self.attns[1].flops(H, W)
+
+        # projection
+        flops += N * self.dim * self.dim
+
+        return flops
+
+if __name__ == '__main__':
+    dim
