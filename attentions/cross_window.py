@@ -173,4 +173,8 @@ if __name__ == '__main__':
     split_size = 7
     branch_num = 2
 
-    model = CrossWindowAttention(dim, H,  bra
+    model = CrossWindowAttention(dim, H,  branch_num=branch_num, split_size=split_size, num_heads=num_heads)
+
+    from utils import measure_flops_params, measure_throughput_cpu, measure_throughput_gpu
+    x = torch.randn(1, H*W, dim)
+    
