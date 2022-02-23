@@ -164,4 +164,13 @@ class CrossWindowAttention(nn.Module):
         return flops
 
 if __name__ == '__main__':
-    dim
+    dim = 768
+    num_heads = 12
+    H = W = 14
+    B = 64
+
+    # special for CrossWindowAttention
+    split_size = 7
+    branch_num = 2
+
+    model = CrossWindowAttention(dim, H,  bra
