@@ -141,4 +141,9 @@ class CrossWindowAttention(nn.Module):
 
     def forward(self, x):
         B, L, C = x.shape
-        qkv = self.qkv(
+        qkv = self.qkv(x).reshape(B, -1, 3, C).permute(2, 0, 1, 3)
+
+        x1 = self.attns[0](qkv[:, :, :, :C // 2])
+        x2 = self.attns[1](qkv[:, :, :, C // 2:])
+        x = torch.cat([x1, x2], dim=2)
+        x = self.proj
