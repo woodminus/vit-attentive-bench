@@ -146,4 +146,13 @@ class CrossWindowAttention(nn.Module):
         x1 = self.attns[0](qkv[:, :, :, :C // 2])
         x2 = self.attns[1](qkv[:, :, :, C // 2:])
         x = torch.cat([x1, x2], dim=2)
-        x = self.proj
+        x = self.proj(x)
+        return x
+
+    def flops(self, H, W):
+        flops = 0
+        N = H * W
+        # qkv
+        flops += N * self.dim * self.dim * 3
+        # attention 1
+        flops += self.a
