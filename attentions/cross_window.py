@@ -135,4 +135,10 @@ class CrossWindowAttention(nn.Module):
                 LePEAttention(
                     dim//2, resolution=patch_resolution, idx = i,
                     split_size=split_size, num_heads=num_heads//2, dim_out=dim//2,
-                    qk_scale=qk_s
+                    qk_scale=qk_scale, attn_drop=attn_drop, proj_drop=proj_drop)
+                for i in range(branch_num)])
+        self.proj = nn.Linear(dim, dim)
+
+    def forward(self, x):
+        B, L, C = x.shape
+        qkv = self.qkv(
