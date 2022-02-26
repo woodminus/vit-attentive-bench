@@ -234,3 +234,191 @@ class FocalWindowAttention(nn.Module):
                 elif self.pool_method == "fc":
                     x_windows_noreshape = x_windows_noreshape.view(B, nWh, nWw, window_size_glo * window_size_glo,
                                                                    C).transpose(3, 4)  # B, nWh, nWw, C, wsize**2
+                    x_windows_pooled = self.pool_layers[k](x_windows_noreshape).flatten(
+                        -2)  # B, nWh, nWw, C
+                elif self.pool_method == "conv":
+                    x_windows_noreshape = x_windows_noreshape.view(-1, window_size_glo, window_size_glo, C).permute(0,
+                                                                                                                    3,
+                                                                                                                    1,
+                                                                                                                    2).contiguous()  # B * nw * nw, C, wsize, wsize
+                    x_windows_pooled = self.pool_layers[k](x_windows_noreshape).view(B, nWh, nWw,
+                                                                                     C)  # B, nWh, nWw, C
+
+                x_windows_all += [x_windows_pooled]
+                x_window_masks_all += [None]
+        return x_windows_all, x_window_masks_all
+
+
+    def forward(self, x, H=14, W=14):
+        """
+        Args:
+            x_all (list[Tensors]): input features at different granularity
+            mask_all (list[Tensors/None]): masks for input features at different granularity
+        """
+        x_all, mask_all = self.to_windows(x, H, W)
+        x = x_all[0]  #
+
+        B, nH, nW, C = x.shape
+        qkv = self.qkv(x).reshape(B, nH, nW, 3, C).permute(3, 0, 1, 2, 4).contiguous()
+        q, k, v = qkv[0], qkv[1], qkv[2]  # B, nH, nW, C
+
+        # partition q map
+        (q_windows, k_windows, v_windows) = map(
+            lambda t: window_partition(t, self.window_size).view(
+                -1, self.window_size * self.window_size, self.num_heads, C // self.num_heads
+            ).transpose(1, 2),
+            (q, k, v)
+        )
+
+        if self.expand_size > 0 and self.focal_level > 0:
+            (k_tl, v_tl) = map(
+                lambda t: torch.roll(t, shifts=(-self.expand_size, -self.expand_size), dims=(1, 2)), (k, v)
+            )
+            (k_tr, v_tr) = map(
+                lambda t: torch.roll(t, shifts=(-self.expand_size, self.expand_size), dims=(1, 2)), (k, v)
+            )
+            (k_bl, v_bl) = map(
+                lambda t: torch.roll(t, shifts=(self.expand_size, -self.expand_size), dims=(1, 2)), (k, v)
+            )
+            (k_br, v_br) = map(
+                lambda t: torch.roll(t, shifts=(self.expand_size, self.expand_size), dims=(1, 2)), (k, v)
+            )
+
+            (k_tl_windows, k_tr_windows, k_bl_windows, k_br_windows) = map(
+                lambda t: window_partition(t, self.window_size).view(-1, self.window_size * self.window_size,
+                                                                        self.num_heads, C // self.num_heads),
+                (k_tl, k_tr, k_bl, k_br)
+            )
+            (v_tl_windows, v_tr_windows, v_bl_windows, v_br_windows) = map(
+                lambda t: window_partition(t, self.window_size).view(-1, self.window_size * self.window_size,
+                                                                        self.num_heads, C // self.num_heads),
+                (v_tl, v_tr, v_bl, v_br)
+            )
+            k_rolled = torch.cat((k_tl_windows, k_tr_windows, k_bl_windows, k_br_windows), 1).transpose(1, 2)
+            v_rolled = torch.cat((v_tl_windows, v_tr_windows, v_bl_windows, v_br_windows), 1).transpose(1, 2)
+
+            # mask out tokens in current window
+            k_rolled = k_rolled[:, :, self.valid_ind_rolled]
+            v_rolled = v_rolled[:, :, self.valid_ind_rolled]
+            k_rolled = torch.cat((k_windows, k_rolled), 2)
+            v_rolled = torch.cat((v_windows, v_rolled), 2)
+        else:
+            k_rolled = k_windows;
+            v_rolled = v_windows;
+
+        if self.pool_method != "none" and self.focal_level > 1:
+            k_pooled = []
+            v_pooled = []
+            for k in range(self.focal_level - 1):
+                stride = 2 ** k
+                x_window_pooled = x_all[k + 1]  # B, nWh, nWw, C
+                nWh, nWw = x_window_pooled.shape[1:3]
+
+                # generate mask for pooled windows
+                mask = x_window_pooled.new(nWh, nWw).fill_(1)
+                unfolded_mask = self.unfolds[k](mask.unsqueeze(0).unsqueeze(1)).view(
+                    1, 1, self.unfolds[k].kernel_size[0], self.unfolds[k].kernel_size[1], -1).permute(0, 4, 2, 3,
+                                                                                                      1).contiguous(). \
+                    view(nWh * nWw // stride // stride, -1, 1)
+
+                if k > 0:
+                    valid_ind_unfold_k = getattr(self, "valid_ind_unfold_{}".format(k))
+                    unfolded_mask = unfolded_mask[:, valid_ind_unfold_k]
+
+                x_window_masks = unfolded_mask.flatten(1).unsqueeze(0)
+                x_window_masks = x_window_masks.masked_fill(x_window_masks == 0, float(-100.0)).masked_fill(
+                    x_window_masks > 0, float(0.0))
+                mask_all[k + 1] = x_window_masks
+
+                # generate k and v for pooled windows
+                qkv_pooled = self.qkv(x_window_pooled).reshape(B, nWh, nWw, 3, C).permute(3, 0, 4, 1, 2).contiguous()
+                k_pooled_k, v_pooled_k = qkv_pooled[1], qkv_pooled[2]  # B, C, nWh, nWw
+
+                (k_pooled_k, v_pooled_k) = map(
+                    lambda t: self.unfolds[k](t).view(
+                        B, C, self.unfolds[k].kernel_size[0], self.unfolds[k].kernel_size[1], -1).permute(0, 4, 2, 3,
+                                                                                                          1).contiguous(). \
+                        view(-1, self.unfolds[k].kernel_size[0] * self.unfolds[k].kernel_size[1], self.num_heads,
+                             C // self.num_heads).transpose(1, 2),
+                    (k_pooled_k, v_pooled_k)  # (B x (nH*nW)) x nHeads x (unfold_wsize x unfold_wsize) x head_dim
+                )
+
+                if k > 0:
+                    (k_pooled_k, v_pooled_k) = map(
+                        lambda t: t[:, :, valid_ind_unfold_k], (k_pooled_k, v_pooled_k)
+                    )
+
+                k_pooled += [k_pooled_k]
+                v_pooled += [v_pooled_k]
+            k_all = torch.cat([k_rolled] + k_pooled, 2)
+            v_all = torch.cat([v_rolled] + v_pooled, 2)
+        else:
+            k_all = k_rolled
+            v_all = v_rolled
+
+        N = k_all.shape[-2]
+        q_windows = q_windows * self.scale
+        attn = (q_windows @ k_all.transpose(-2,
+                                            -1))  # B*nW, nHead, window_size*window_size, focal_window_size*focal_window_size
+
+        window_area = self.window_size * self.window_size
+        window_area_rolled = k_rolled.shape[2]
+
+        # add relative position bias for tokens inside window
+        relative_position_bias = self.relative_position_bias_table[self.relative_position_index.view(-1)].view(
+            self.window_size * self.window_size, self.window_size * self.window_size, -1)  # Wh*Ww,Wh*Ww,nH
+        relative_position_bias = relative_position_bias.permute(2, 0, 1).contiguous()  # nH, Wh*Ww, Wh*Ww
+        attn[:, :, :window_area, :window_area] = attn[:, :, :window_area,
+                                                 :window_area] + relative_position_bias.unsqueeze(0)
+
+        # add relative position bias for patches inside a window
+        if self.expand_size > 0 and self.focal_level > 0:
+            attn[:, :, :window_area, window_area:window_area_rolled] = attn[:, :, :window_area,
+                                                                       window_area:window_area_rolled] + self.relative_position_bias_table_to_neighbors
+
+        if self.pool_method != "none" and self.focal_level > 1:
+            # # add relative position bias for different windows in an image
+            offset = window_area_rolled
+            for k in range(self.focal_level - 1):
+                # add relative position bias
+                relative_position_index_k = getattr(self, 'relative_position_index_{}'.format(k))
+                relative_position_bias_to_windows = self.relative_position_bias_table_to_windows[k][:,
+                                                    relative_position_index_k.view(-1)].view(
+                    -1, self.window_size * self.window_size, (self.focal_window + 2 ** k - 1) ** 2,
+                )  # nH, NWh*NWw,focal_region*focal_region
+                attn[:, :, :window_area, offset:(offset + (self.focal_window + 2 ** k - 1) ** 2)] = \
+                    attn[:, :, :window_area, offset:(offset + (
+                                self.focal_window + 2 ** k - 1) ** 2)] + relative_position_bias_to_windows.unsqueeze(0)
+                # add attentional mask
+                if mask_all[k + 1] is not None:
+                    attn[:, :, :window_area, offset:(offset + (self.focal_window + 2 ** k - 1) ** 2)] = \
+                        attn[:, :, :window_area, offset:(offset + (self.focal_window + 2 ** k - 1) ** 2)] + \
+                        mask_all[k + 1][:, :, None, None, :].repeat(attn.shape[0] // mask_all[k + 1].shape[1], 1, 1, 1,
+                                                                    1).view(-1, 1, 1, mask_all[k + 1].shape[-1])
+
+                offset += (self.focal_window + 2 ** k - 1) ** 2
+
+        if mask_all[0] is not None:
+            nW = mask_all[0].shape[0]
+            attn = attn.view(attn.shape[0] // nW, nW, self.num_heads, window_area, N)
+            attn[:, :, :, :, :window_area] = attn[:, :, :, :, :window_area] + mask_all[0][None, :, None, :, :]
+            attn = attn.view(-1, self.num_heads, window_area, N)
+            attn = self.softmax(attn)
+        else:
+            attn = self.softmax(attn)
+
+        attn = self.attn_drop(attn)
+
+        x = (attn @ v_all).transpose(1, 2).reshape(attn.shape[0], window_area, C)
+        x = self.proj(x)
+        x = self.proj_drop(x)
+
+        x = x[:, :self.window_size ** 2]
+
+        # merge windows
+        x = x.view(-1, self.window_size, self.window_size, C)
+        shifted_x = window_reverse(x, self.window_size, H, W)  # B H' W' C
+
+        # reverse cyclic shift
+        if self.shift_size > 0:
+            x = torch.roll(shifted_x, shifts=(self.shift_size, self.shift_size), dims=(1, 2))
