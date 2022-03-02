@@ -116,3 +116,50 @@ class HiLo(nn.Module):
         # pad the feature map when the height and width cannot be divided by window size
         Hp = self.ws * math.ceil(H / self.ws)
         Wp = self.ws * math.ceil(W / self.ws)
+
+        Np = Hp * Wp
+
+        # For Hi-Fi
+        # qkv
+        hifi_flops = Np * self.dim * self.h_dim * 3
+        nW = (Hp // self.ws) * (Wp // self.ws)
+        window_len = self.ws * self.ws
+        # q @ k and attn @ v
+        window_flops = window_len * window_len * self.h_dim * 2
+        hifi_flops += nW * window_flops
+        # projection
+        hifi_flops += Np * self.h_dim * self.h_dim
+
+        # for Lo-Fi
+        # q
+        lofi_flops = Np * self.dim * self.l_dim
+        kv_len = (Hp // self.ws) * (Wp // self.ws)
+        # k, v
+        lofi_flops += kv_len * self.dim * self.l_dim * 2
+        # q @ k and attn @ v
+        lofi_flops += Np * self.l_dim * kv_len * 2
+        # projection
+        lofi_flops += Np * self.l_dim * self.l_dim
+
+        return hifi_flops + lofi_flops
+
+
+
+if __name__ == '__main__':
+    dim = 768
+    num_heads = 12
+    H = W = 14
+    B = 64
+
+    # special for HiLo
+    alpha = 0.9
+    window_size = 2
+
+    model = HiLo(dim=dim, num_heads=num_heads, qkv_bias=True, window_size=window_size, alpha=alpha)
+
+    from utils import measure_flops_params, measure_throughput_cpu, measure_throughput_gpu
+
+    x = torch.randn(1, H * W, dim)
+    measure_flops_params(model, x)
+    measure_throughput_cpu(model)
+    measure_throughput_gpu(model)
