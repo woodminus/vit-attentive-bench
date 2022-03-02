@@ -422,3 +422,62 @@ class FocalWindowAttention(nn.Module):
         # reverse cyclic shift
         if self.shift_size > 0:
             x = torch.roll(shifted_x, shifts=(self.shift_size, self.shift_size), dims=(1, 2))
+        else:
+            x = shifted_x
+        x = x[:, :H, :W].contiguous().view(B, -1, C)
+
+        return x
+
+    def extra_repr(self) -> str:
+        return f'dim={self.dim}, window_size={self.window_size}, num_heads={self.num_heads}'
+
+    def flops(self, N, window_size, unfold_size):
+        # calculate flops for 1 window with token length of N
+        flops = 0
+        # qkv = self.qkv(x)
+        flops += N * self.dim * 3 * self.dim
+        # attn = (q @ k.transpose(-2, -1))
+        flops += self.num_heads * N * (self.dim // self.num_heads) * N
+        if self.pool_method != "none" and self.focal_level > 1:
+            flops += self.num_heads * N * (self.dim // self.num_heads) * (unfold_size * unfold_size)
+        if self.expand_size > 0 and self.focal_level > 0:
+            flops += self.num_heads * N * (self.dim // self.num_heads) * (
+                        (window_size + 2 * self.expand_size) ** 2 - window_size ** 2)
+
+            #  x = (attn @ v)
+        flops += self.num_heads * N * N * (self.dim // self.num_heads)
+        if self.pool_method != "none" and self.focal_level > 1:
+            flops += self.num_heads * N * (self.dim // self.num_heads) * (unfold_size * unfold_size)
+        if self.expand_size > 0 and self.focal_level > 0:
+            flops += self.num_heads * N * (self.dim // self.num_heads) * (
+                        (window_size + 2 * self.expand_size) ** 2 - window_size ** 2)
+
+            # x = self.proj(x)
+        flops += N * self.dim * self.dim
+        return flops
+
+
+if __name__ == '__main__':
+    dim = 768
+    num_heads = 12
+    H = W = 14
+    B = 64
+
+    # setting for 1/16 feature map
+    expand_size = 3
+    focal_level = 2
+    window_size = 7
+    focal_window = 3
+    pool_method = 'fc'
+
+    model = FocalWindowAttention(
+            dim, expand_size=expand_size, window_size=window_size,
+            focal_window=focal_window, focal_level=focal_level, num_heads=num_heads, pool_method=pool_method)
+
+    from utils import measure_flops_params, measure_throughput_cpu, measure_throughput_gpu
+
+    x = torch.randn(1, H * W, dim)
+    measure_flops_params(model, x)
+    measure_throughput_cpu(model)
+    measure_throughput_gpu(model)
+
