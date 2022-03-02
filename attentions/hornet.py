@@ -26,4 +26,10 @@ class gnconv(nn.Module):
         self.proj_out = nn.Conv2d(dim, dim, 1)
 
         self.pws = nn.ModuleList(
-            [nn.Conv2d(self.dims[i], self.di
+            [nn.Conv2d(self.dims[i], self.dims[i + 1], 1) for i in range(order - 1)]
+        )
+
+        self.scale = s
+        # print('[gnconv]', order, 'order with dims=', self.dims, 'scale=%.4f' % self.scale)
+
+    def fo
