@@ -14,4 +14,9 @@ class gnconv(nn.Module):
         super().__init__()
         self.order = order
         self.dim = dim
-        self.dims = [dim // 2 ** i f
+        self.dims = [dim // 2 ** i for i in range(order)]
+        self.dims.reverse()
+        self.proj_in = nn.Conv2d(dim, 2 * dim, 1)
+
+        if gflayer is None:
+            self.dwconv = get_dwconv(sum(self.dim
