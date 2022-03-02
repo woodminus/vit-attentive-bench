@@ -19,4 +19,11 @@ class gnconv(nn.Module):
         self.proj_in = nn.Conv2d(dim, 2 * dim, 1)
 
         if gflayer is None:
-            self.dwconv = get_dwconv(sum(self.dim
+            self.dwconv = get_dwconv(sum(self.dims), 7, True)
+        else:
+            self.dwconv = gflayer(sum(self.dims), h=h, w=w)
+
+        self.proj_out = nn.Conv2d(dim, dim, 1)
+
+        self.pws = nn.ModuleList(
+            [nn.Conv2d(self.dims[i], self.di
