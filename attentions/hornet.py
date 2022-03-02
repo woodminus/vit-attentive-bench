@@ -10,4 +10,8 @@ def get_dwconv(dim, kernel, bias):
     return nn.Conv2d(dim, dim, kernel_size=kernel, padding=(kernel-1)//2 ,bias=bias, groups=dim)
 
 class gnconv(nn.Module):
-    def 
+    def __init__(self, dim, order=5, gflayer=None, h=14, w=8, s=1.0):
+        super().__init__()
+        self.order = order
+        self.dim = dim
+        self.dims = [dim // 2 ** i f
