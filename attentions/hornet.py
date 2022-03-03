@@ -32,4 +32,10 @@ class gnconv(nn.Module):
         self.scale = s
         # print('[gnconv]', order, 'order with dims=', self.dims, 'scale=%.4f' % self.scale)
 
-    def fo
+    def forward(self, x, H=14, W=14):
+        B, N, C = x.shape
+        x = x.permute(0, 2, 1).reshape(B, C, H, W)
+        B, C, H, W = x.shape
+
+        fused_x = self.proj_in(x)
+        pwa, a
