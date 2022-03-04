@@ -38,4 +38,9 @@ class gnconv(nn.Module):
         B, C, H, W = x.shape
 
         fused_x = self.proj_in(x)
-        pwa, a
+        pwa, abc = torch.split(fused_x, (self.dims[0], sum(self.dims)), dim=1)
+
+        dw_abc = self.dwconv(abc) * self.scale
+
+        dw_list = torch.split(dw_abc, self.dims, dim=1)
+        x = pwa * dw_l
