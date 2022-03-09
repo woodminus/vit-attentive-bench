@@ -43,4 +43,11 @@ class gnconv(nn.Module):
         dw_abc = self.dwconv(abc) * self.scale
 
         dw_list = torch.split(dw_abc, self.dims, dim=1)
-        x = pwa * dw_l
+        x = pwa * dw_list[0]
+
+        for i in range(self.order - 1):
+            x = self.pws[i](x) * dw_list[i + 1]
+
+        x = self.proj_out(x)
+
+        return x.reshape(B, C, N).permu
