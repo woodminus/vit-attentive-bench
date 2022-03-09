@@ -50,4 +50,18 @@ class gnconv(nn.Module):
 
         x = self.proj_out(x)
 
-        return x.reshape(B, C, N).permu
+        return x.reshape(B, C, N).permute(0, 2, 1)
+
+
+
+if __name__ == '__main__':
+    dim = 768
+    num_heads = 12
+    H = W = 14
+    B = 64
+
+    # special for HorNet at 1/16 scale
+    order = 4
+    s = 1.0/3.0
+    gflayer = None
+ 
