@@ -64,4 +64,8 @@ if __name__ == '__main__':
     order = 4
     s = 1.0/3.0
     gflayer = None
- 
+    model = gnconv(dim=dim, order=order, gflayer=gflayer, s=s)
+
+    from utils import measure_flops_params, measure_throughput_cpu, measure_throughput_gpu
+
+    x = torch.randn(1, H * W,
