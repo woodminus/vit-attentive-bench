@@ -89,3 +89,4 @@ if __name__ == '__main__':
     x = torch.randn(1, H * W, dim)
     measure_flops_params(model, x)
     measure_throughput_cpu(model)
+    measure_throughput_gpu(model)
