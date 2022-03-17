@@ -9,4 +9,19 @@ import math
 from scipy.stats import ortho_group
 import torch
 from torch import nn
-from eino
+from einops import rearrange, repeat
+
+from functools import partial
+
+
+# helpers
+
+def exists(val):
+    return val is not None
+
+
+def default(val, d):
+    return val if exists(val) else d
+
+
+# kernel function
