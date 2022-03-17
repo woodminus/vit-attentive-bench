@@ -24,4 +24,9 @@ def default(val, d):
     return val if exists(val) else d
 
 
-# kernel function
+# kernel functions
+
+# transcribed from jax to pytorch from
+# https://github.com/google-research/google-research/blob/master/performer/fast_attention/jax/fast_attention.py
+
+def softmax_kernel(data, *, proj
