@@ -29,4 +29,8 @@ def default(val, d):
 # transcribed from jax to pytorch from
 # https://github.com/google-research/google-research/blob/master/performer/fast_attention/jax/fast_attention.py
 
-def softmax_kernel(data, *, proj
+def softmax_kernel(data, *, projection_matrix, is_query, normalize_data=True,
+                   eps=1e-4, device=None):
+    b, h, *_ = data.shape
+
+    data_normalizer = (data.shape[-1] ** -0.25) if normalize_data else 1
