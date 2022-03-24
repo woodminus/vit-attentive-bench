@@ -33,4 +33,11 @@ def softmax_kernel(data, *, projection_matrix, is_query, normalize_data=True,
                    eps=1e-4, device=None):
     b, h, *_ = data.shape
 
-    data_normalizer = (data.shape[-1] ** -0.25) if normalize_data else 1
+    data_normalizer = (data.shape[-1] ** -0.25) if normalize_data else 1.
+
+    ratio = (projection_matrix.shape[0] ** -0.5)
+
+    projection = repeat(projection_matrix, 'j d -> b h j d', b=b, h=h)
+    projection = projection.type_as(data)
+
+    data_dash = torch.einsum('
