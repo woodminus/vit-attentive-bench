@@ -45,4 +45,10 @@ def softmax_kernel(data, *, projection_matrix, is_query, normalize_data=True,
 
     diag_data = data ** 2
     diag_data = torch.sum(diag_data, dim=-1)
-    diag_
+    diag_data = (diag_data / 2.0) * (data_normalizer ** 2)
+    diag_data = diag_data.unsqueeze(dim=-1)
+
+    if is_query:
+        data_dash = ratio * (
+                torch.exp(data_dash - diag_data -
+      
