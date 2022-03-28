@@ -76,4 +76,9 @@ def generalized_kernel(data, *, projection_matrix, kernel_fn=nn.ReLU(),
                              projection)
 
     data_prime = kernel_fn(data_dash) + kernel_epsilon
-    retur
+    return data_prime.type_as(data)
+
+
+def gaussian_orthogonal_random_matrix(nb_rows, nb_columns, scaling=0,
+                                      device=None):
+    nb_full_blocks = int(nb_rows 
