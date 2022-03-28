@@ -81,4 +81,12 @@ def generalized_kernel(data, *, projection_matrix, kernel_fn=nn.ReLU(),
 
 def gaussian_orthogonal_random_matrix(nb_rows, nb_columns, scaling=0,
                                       device=None):
-    nb_full_blocks = int(nb_rows 
+    nb_full_blocks = int(nb_rows / nb_columns)
+
+    block_list = []
+
+    for _ in range(nb_full_blocks):
+        q = torch.FloatTensor(ortho_group.rvs(nb_columns), device='cpu').to(device)
+        block_list.append(q)
+
+ 
