@@ -55,4 +55,10 @@ def softmax_kernel(data, *, projection_matrix, is_query, normalize_data=True,
                                     keepdim=True).values) + eps)
     else:
         data_dash = ratio * (
-                torch.exp(data_dash - di
+                torch.exp(data_dash - diag_data - torch.max(data_dash)) + eps)
+
+    return data_dash.type_as(data)
+
+
+def generalized_kernel(data, *, projection_matrix, kernel_fn=nn.ReLU(),
+                       kernel_
