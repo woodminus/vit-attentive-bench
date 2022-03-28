@@ -89,4 +89,7 @@ def gaussian_orthogonal_random_matrix(nb_rows, nb_columns, scaling=0,
         q = torch.FloatTensor(ortho_group.rvs(nb_columns), device='cpu').to(device)
         block_list.append(q)
 
- 
+    remaining_rows = nb_rows - nb_full_blocks * nb_columns
+    if remaining_rows > 0:
+        q = torch.FloatTensor(ortho_group.rvs(nb_columns), device='cpu').to(device)
+        block_list.append(
