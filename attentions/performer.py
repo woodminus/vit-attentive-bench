@@ -66,4 +66,8 @@ def generalized_kernel(data, *, projection_matrix, kernel_fn=nn.ReLU(),
 
     data_normalizer = (data.shape[-1] ** -0.25) if normalize_data else 1.
 
-    if projection_matrix is None
+    if projection_matrix is None:
+        return kernel_fn(data_normalizer * data) + kernel_epsilon
+
+    projection = repeat(projection_matrix, 'j d -> b h j d', b=b, h=h)
+    projection = projection.t
