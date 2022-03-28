@@ -70,4 +70,10 @@ def generalized_kernel(data, *, projection_matrix, kernel_fn=nn.ReLU(),
         return kernel_fn(data_normalizer * data) + kernel_epsilon
 
     projection = repeat(projection_matrix, 'j d -> b h j d', b=b, h=h)
-    projection = projection.t
+    projection = projection.type_as(data)
+
+    data_dash = torch.einsum('...id,...jd->...ij', (data_normalizer * data),
+                             projection)
+
+    data_prime = kernel_fn(data_dash) + kernel_epsilon
+    retur
