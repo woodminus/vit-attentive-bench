@@ -61,4 +61,9 @@ def softmax_kernel(data, *, projection_matrix, is_query, normalize_data=True,
 
 
 def generalized_kernel(data, *, projection_matrix, kernel_fn=nn.ReLU(),
-                       kernel_
+                       kernel_epsilon=0.001, normalize_data=True, device=None):
+    b, h, *_ = data.shape
+
+    data_normalizer = (data.shape[-1] ** -0.25) if normalize_data else 1.
+
+    if projection_matrix is None
