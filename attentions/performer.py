@@ -99,4 +99,8 @@ def gaussian_orthogonal_random_matrix(nb_rows, nb_columns, scaling=0,
     if scaling == 0:
         multiplier = torch.randn((nb_rows, nb_columns), device=device).norm(
             dim=1)
-    elif sca
+    elif scaling == 1:
+        multiplier = math.sqrt((float(nb_columns))) * torch.ones((nb_rows,),
+                                                                 device=device)
+    else:
+        raise ValueError(f'Invali
