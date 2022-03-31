@@ -103,4 +103,13 @@ def gaussian_orthogonal_random_matrix(nb_rows, nb_columns, scaling=0,
         multiplier = math.sqrt((float(nb_columns))) * torch.ones((nb_rows,),
                                                                  device=device)
     else:
-        raise ValueError(f'Invali
+        raise ValueError(f'Invalid scaling {scaling}')
+
+    return torch.diag(multiplier) @ final_matrix
+
+
+# linear attention classes with softmax kernel
+
+# non-causal linear attention
+def linear_attention(q, k, v):
+    k_cumsum = k.sum(
