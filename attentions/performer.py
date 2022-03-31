@@ -115,4 +115,10 @@ def linear_attention(q, k, v):
     k_cumsum = k.sum(dim=-2)
     D_inv = 1. / torch.einsum('...nd,...d->...n', q, k_cumsum.type_as(q))
     context = torch.einsum('...nd,...ne->...de', k, v)
-    out = torch.einsum('...de,...nd,...n->..
+    out = torch.einsum('...de,...nd,...n->...ne', context, q, D_inv)
+    return out
+
+
+class FastAttention(nn.Module):
+    def __init__(self, dim_heads, nb_features=None, ortho_scaling=0,
+                 generalized_attention=Fals
