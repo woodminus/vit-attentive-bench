@@ -126,4 +126,9 @@ class FastAttention(nn.Module):
         super().__init__()
         nb_features = default(nb_features, int(dim_heads * math.log(dim_heads)))
 
-        self.dim_heads = dim_he
+        self.dim_heads = dim_heads
+        self.nb_features = nb_features
+        self.ortho_scaling = ortho_scaling
+
+        self.create_projection = partial(gaussian_orthogonal_random_matrix,
+              
