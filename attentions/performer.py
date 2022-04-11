@@ -133,4 +133,8 @@ class FastAttention(nn.Module):
         self.create_projection = partial(gaussian_orthogonal_random_matrix,
                                          nb_rows=self.nb_features,
                                          nb_columns=dim_heads,
-                                         scaling=
+                                         scaling=ortho_scaling)
+        projection_matrix = self.create_projection()
+        self.register_buffer('projection_matrix', projection_matrix)
+
+        self.generalized_attention = generalized_attenti
