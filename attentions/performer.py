@@ -137,4 +137,8 @@ class FastAttention(nn.Module):
         projection_matrix = self.create_projection()
         self.register_buffer('projection_matrix', projection_matrix)
 
-        self.generalized_attention = generalized_attenti
+        self.generalized_attention = generalized_attention
+        self.kernel_fn = kernel_fn
+
+        # if this is turned on, no projection will be used
+        # queries and keys will be softmax-ed as in the original efficient attention paper
