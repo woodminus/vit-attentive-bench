@@ -147,4 +147,12 @@ class FastAttention(nn.Module):
 
     @torch.no_grad()
     def redraw_projection_matrix(self, device):
-        projections = self.create_projection(dev
+        projections = self.create_projection(device=device)
+        self.projection_matrix.copy_(projections)
+        del projections
+
+    def forward(self, q, k, v):
+        device = q.device
+
+        if self.no_projection:
+            q = q.so
