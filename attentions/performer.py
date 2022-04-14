@@ -155,4 +155,9 @@ class FastAttention(nn.Module):
         device = q.device
 
         if self.no_projection:
-            q = q.so
+            q = q.softmax(dim=-1)
+            k = k.softmax(dim=-2)
+
+        elif self.generalized_attention:
+            create_kernel = partial(generalized_kernel,
+     
