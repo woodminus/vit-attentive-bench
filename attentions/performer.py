@@ -160,4 +160,7 @@ class FastAttention(nn.Module):
 
         elif self.generalized_attention:
             create_kernel = partial(generalized_kernel,
-     
+                                    kernel_fn=self.kernel_fn,
+                                    projection_matrix=self.projection_matrix,
+                                    device=device)
+            q,
