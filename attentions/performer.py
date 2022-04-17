@@ -163,4 +163,9 @@ class FastAttention(nn.Module):
                                     kernel_fn=self.kernel_fn,
                                     projection_matrix=self.projection_matrix,
                                     device=device)
-            q,
+            q, k = map(create_kernel, (q, k))
+
+        else:
+            create_kernel = partial(softmax_kernel,
+                                    projection_matrix=self.projection_matrix,
+     
