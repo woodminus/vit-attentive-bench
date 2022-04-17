@@ -175,4 +175,10 @@ class FastAttention(nn.Module):
         out = linear_attention(q, k, v)
         return out
 
-    @s
+    @staticmethod
+    def compute_macs(module, input, output):
+        input = input[0]
+        _, H, N, C = input.shape
+        Nf = module.nb_features
+        assert C == module.dim_heads
+       
