@@ -168,4 +168,11 @@ class FastAttention(nn.Module):
         else:
             create_kernel = partial(softmax_kernel,
                                     projection_matrix=self.projection_matrix,
-     
+                                    device=device)
+            q = create_kernel(q, is_query=True)
+            k = create_kernel(k, is_query=False)
+
+        out = linear_attention(q, k, v)
+        return out
+
+    @s
