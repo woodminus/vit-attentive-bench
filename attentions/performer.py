@@ -181,4 +181,10 @@ class FastAttention(nn.Module):
         _, H, N, C = input.shape
         Nf = module.nb_features
         assert C == module.dim_heads
-       
+        macs = 0
+        n_params = 0
+
+        if module.no_projection:
+            raise ValueError("Not supported yet!")
+        elif module.generalized_attention:
+            raise ValueError("Not sup
