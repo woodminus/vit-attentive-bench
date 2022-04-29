@@ -187,4 +187,9 @@ class FastAttention(nn.Module):
         if module.no_projection:
             raise ValueError("Not supported yet!")
         elif module.generalized_attention:
-            raise ValueError("Not sup
+            raise ValueError("Not supported yet!")
+        else:
+            n_params += C * Nf
+            # q = create_kernel(q, is_query=True)
+            macs += H * N * Nf * C + 2 * H * N * C + 2 * H * N * Nf
+            #
