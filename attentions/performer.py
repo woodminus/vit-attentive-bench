@@ -197,4 +197,7 @@ class FastAttention(nn.Module):
 
         # out = linear_attention(q, k, v)
         # k_cumsum = k.sum(dim=-2)
-        m
+        macs += H * N * Nf
+        # D_inv = 1. / torch.einsum('...nd,...d->...n', q, k_cumsum.type_as(q))
+        macs += H * N * Nf
+        # context = torch.einsum('...nd,...
