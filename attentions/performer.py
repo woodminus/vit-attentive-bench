@@ -204,4 +204,12 @@ class FastAttention(nn.Module):
         macs += H * N * Nf * C
         # out = torch.einsum('...de,...nd,...n->...ne', context, q, D_inv)
         macs += 2 * H * N * Nf * C
-        # print('macs fast att', 
+        # print('macs fast att', macs / 1e8)
+
+        module.__flops__ += macs
+        # return n_params, macs
+
+
+class PerformerSelfAttention(nn.Module):
+    def __init__(self, dim, num_heads=8, qkv_bias=False, qk_scale=None,
+       
