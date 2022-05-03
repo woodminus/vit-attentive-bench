@@ -200,4 +200,8 @@ class FastAttention(nn.Module):
         macs += H * N * Nf
         # D_inv = 1. / torch.einsum('...nd,...d->...n', q, k_cumsum.type_as(q))
         macs += H * N * Nf
-        # context = torch.einsum('...nd,...
+        # context = torch.einsum('...nd,...ne->...de', k, v)
+        macs += H * N * Nf * C
+        # out = torch.einsum('...de,...nd,...n->...ne', context, q, D_inv)
+        macs += 2 * H * N * Nf * C
+        # print('macs fast att', 
