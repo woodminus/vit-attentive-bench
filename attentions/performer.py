@@ -212,4 +212,7 @@ class FastAttention(nn.Module):
 
 class PerformerSelfAttention(nn.Module):
     def __init__(self, dim, num_heads=8, qkv_bias=False, qk_scale=None,
-       
+                 attn_drop=0., proj_drop=0., nb_features=None,
+                 generalized_attention=False,
+                 kernel_fn=nn.ReLU(), no_projection=False):
+        super().__init__()
