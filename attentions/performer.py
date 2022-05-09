@@ -216,3 +216,8 @@ class PerformerSelfAttention(nn.Module):
                  generalized_attention=False,
                  kernel_fn=nn.ReLU(), no_projection=False):
         super().__init__()
+        assert dim % num_heads == 0, 'dimension must be divisible by number of heads'
+        head_dim = dim // num_heads
+        self.dim = dim
+        self.head_dim = head_dim
+        self.nb_fe
