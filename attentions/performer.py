@@ -220,4 +220,8 @@ class PerformerSelfAttention(nn.Module):
         head_dim = dim // num_heads
         self.dim = dim
         self.head_dim = head_dim
-        self.nb_fe
+        self.nb_features = nb_features
+        self.no_projection = no_projection
+        self.generalized_attention = generalized_attention
+        self.fast_attention = FastAttention(
+            head_dim, nb
