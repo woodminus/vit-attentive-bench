@@ -229,4 +229,7 @@ class PerformerSelfAttention(nn.Module):
         )
 
         self.num_heads = num_heads
-        self.scale = qk
+        self.scale = qk_scale or head_dim ** -0.5  # not used in performer
+        self.qkv = nn.Linear(dim, dim * 3, bias=qkv_bias)
+        self.attn_drop = nn.Dropout(attn_drop)
+        se
