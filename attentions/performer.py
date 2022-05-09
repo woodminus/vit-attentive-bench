@@ -224,4 +224,9 @@ class PerformerSelfAttention(nn.Module):
         self.no_projection = no_projection
         self.generalized_attention = generalized_attention
         self.fast_attention = FastAttention(
-            head_dim, nb
+            head_dim, nb_features, generalized_attention=generalized_attention,
+            kernel_fn=kernel_fn, no_projection=no_projection
+        )
+
+        self.num_heads = num_heads
+        self.scale = qk
