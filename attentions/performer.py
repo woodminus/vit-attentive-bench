@@ -232,4 +232,10 @@ class PerformerSelfAttention(nn.Module):
         self.scale = qk_scale or head_dim ** -0.5  # not used in performer
         self.qkv = nn.Linear(dim, dim * 3, bias=qkv_bias)
         self.attn_drop = nn.Dropout(attn_drop)
-        se
+        self.proj = nn.Linear(dim, dim)
+        self.proj_drop = nn.Dropout(proj_drop)
+
+    def forward(self, x, H=14, W=14):
+        B, N, C = x.shape
+
+        qkv = self.qkv(x).reshape(B, N, 3
