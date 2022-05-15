@@ -242,4 +242,10 @@ class PerformerSelfAttention(nn.Module):
                                   C // self.num_heads).permute(2, 0, 3, 1, 4)
         q, k, v = qkv[0], qkv[1], qkv[2]  # make torchscript happy (cannot use tensor as tuple)
 
-  
+        x = self.fast_attention(q, k, v)
+        x = rearrange(x, 'b h n d -> b n (h d)')
+        x = self.proj(x)
+        x = self.proj_drop(x)
+        return x
+
+    def flops(self,
