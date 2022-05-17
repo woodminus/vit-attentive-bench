@@ -248,4 +248,13 @@ class PerformerSelfAttention(nn.Module):
         x = self.proj_drop(x)
         return x
 
-    def flops(self,
+    def flops(self, N):
+        H = self.num_heads
+        C = self.head_dim
+        Nf = self.nb_features
+        macs = 0
+        n_params = 0
+
+        if self.no_projection:
+            raise ValueError("Not supported yet!")
+     
