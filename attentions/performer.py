@@ -257,4 +257,9 @@ class PerformerSelfAttention(nn.Module):
 
         if self.no_projection:
             raise ValueError("Not supported yet!")
+        elif self.generalized_attention:
+            raise ValueError("Not supported yet!")
+        else:
+            n_params += C * Nf
+            # q = create_kernel(q, is_query=True)
      
