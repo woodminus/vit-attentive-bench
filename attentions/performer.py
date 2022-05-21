@@ -262,4 +262,8 @@ class PerformerSelfAttention(nn.Module):
         else:
             n_params += C * Nf
             # q = create_kernel(q, is_query=True)
-     
+            macs += H * N * Nf * C + 2 * H * N * C + 2 * H * N * Nf
+            # k = create_kernel(k, is_query=False)
+            macs += H * N * Nf * C + 2 * H * N * C + 2 * H * N * Nf
+
+        # out = linear_att
