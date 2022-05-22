@@ -266,4 +266,8 @@ class PerformerSelfAttention(nn.Module):
             # k = create_kernel(k, is_query=False)
             macs += H * N * Nf * C + 2 * H * N * C + 2 * H * N * Nf
 
-        # out = linear_att
+        # out = linear_attention(q, k, v)
+        # k_cumsum = k.sum(dim=-2)
+        macs += H * N * Nf
+        # D_inv = 1. / torch.einsum('...nd,...d->...n', q, k_cumsum.type_as(q))
+        macs += 
