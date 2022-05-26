@@ -275,4 +275,17 @@ class PerformerSelfAttention(nn.Module):
         macs += H * N * Nf * C
         # out = torch.einsum('...de,...nd,...n->...ne', context, q, D_inv)
         macs += 2 * H * N * Nf * C
-        # print('
+        # print('macs fast att', macs / 1e8)
+
+        return macs
+
+if __name__ == '__main__':
+    dim = 768
+    num_heads = 12
+    H = W = 14
+    B = 64
+
+    # special for performer
+    nb_features = 256
+
+    model = PerformerSelfAttenti
