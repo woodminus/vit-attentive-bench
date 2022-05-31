@@ -288,4 +288,9 @@ if __name__ == '__main__':
     # special for performer
     nb_features = 256
 
-    model = PerformerSelfAttenti
+    model = PerformerSelfAttention(dim, num_heads=num_heads, qkv_bias=True, nb_features=nb_features)
+
+    from utils import measure_flops_params, measure_throughput_cpu, measure_throughput_gpu
+
+    x = torch.randn(1, H * W, dim)
+    measure_flops_param
