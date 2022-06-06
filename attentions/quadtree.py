@@ -113,3 +113,145 @@ class QTAttAPytorch(nn.Module):
                 topk_idx = torch.gather(idx, index=topk_idx, dim=-2)
 
                 topk_idx = topk_idx.view(bs, h // 2, w // 2, 2, 2, self.topk, self.nhead)
+
+                topk_idx = rearrange(topk_idx, "b h w t1 t2 k nh -> b (h t1 w t2) k nh")  # reshape back
+
+                topk_score = topk_score.view(bs, h // 2, w // 2, 2, 2, self.topk, self.nhead)
+                topk_score = rearrange(topk_score, "b h w t1 t2 k nh -> b (h t1 w t2) k nh")  # reshape back
+
+            topk_pos = torch.stack([topk_idx // w, topk_idx % w])  # convert to coordinate
+
+        return message
+class QTAttention(nn.Module):
+    def __init__(
+        self, dim, num_heads=8, qkv_bias=False, qk_scale=None, attn_drop=0.0, proj_drop=0.0, sr_ratio=1, attn_type=None, cpu=False
+    ):
+        self.attn_type = attn_type
+        super().__init__()
+        assert dim % num_heads == 0, f"dim {dim} should be divided by num_heads {num_heads}."
+
+        self.dim = dim
+        self.num_heads = num_heads
+        head_dim = dim // num_heads
+        self.scale = qk_scale or head_dim ** -0.5
+
+        self.q_proj = nn.Conv2d(dim, dim, kernel_size=1, stride=1, bias=qkv_bias)
+        self.k_proj = nn.Conv2d(dim, dim, kernel_size=1, stride=1, bias=qkv_bias)
+        self.v_proj = nn.Conv2d(dim, dim, kernel_size=1, stride=1, bias=qkv_bias)
+
+        if attn_type == "B":
+            if cpu:
+                self.py_att = QTAttAPytorch(num_heads, dim // num_heads, scale=sr_ratio, topk=8)
+            else:
+                self.py_att = QTAttB(num_heads, dim // num_heads, scale=sr_ratio, topks=[8, 8, 8, 8], lepe=True)
+            self.value_branchs = nn.ModuleList(
+                [
+                    nn.Sequential(
+                        nn.GroupNorm(1, dim),
+                        nn.GELU(),
+                        nn.Conv2d(dim, dim, kernel_size=2, stride=2),
+                        nn.GroupNorm(1, dim),
+                        nn.GELU(),
+                        nn.Conv2d(dim, dim, kernel_size=1, stride=1),
+                    )
+                    for i in range(sr_ratio - 1)
+                ]
+            )
+        else:
+            self.py_att = QTAttA(num_heads, dim // num_heads, topks=[8, 8, 8, 8])
+
+        self.attn_drop = nn.Dropout(attn_drop)
+        self.proj = nn.Linear(dim, dim)
+        self.proj_drop = nn.Dropout(proj_drop)
+
+        self.sr_ratio = sr_ratio
+
+        self.apply(self._init_weights)
+
+    def _init_weights(self, m):
+        if isinstance(m, nn.Linear):
+            trunc_normal_(m.weight, std=0.02)
+            if isinstance(m, nn.Linear) and m.bias is not None:
+                nn.init.constant_(m.bias, 0)
+        elif isinstance(m, nn.LayerNorm):
+            nn.init.constant_(m.bias, 0)
+            nn.init.constant_(m.weight, 1.0)
+        elif isinstance(m, nn.Conv2d):
+            fan_out = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
+            fan_out //= m.groups
+            # m.weight.data.normal_(0, math.sqrt(2.0 / fan_out))
+            trunc_normal_(m.weight, std=0.02)
+            m.init = True
+            if m.bias is not None:
+                m.bias.data.zero_()
+
+    def forward(self, x, H=14, W=14):
+
+        B, N, C = x.shape
+        # H = W = int(N ** 0.5)
+        y = x
+        x = x.permute(0, 2, 1).reshape(B, C, H, W)
+        target = x
+        keys = []
+        values = []
+        queries = []
+
+        q = self.q_proj(x)
+        k = self.k_proj(target)
+        v = self.v_proj(target)
+
+        for i in range(self.sr_ratio):
+            keys.append(k.float())
+            values.append(v.float())
+            queries.append(q.float())
+            if i != self.sr_ratio - 1:
+                k = F.avg_pool2d(k, kernel_size=2, stride=2)
+                q = F.avg_pool2d(q, kernel_size=2, stride=2)
+                if self.attn_type == "B":
+                    v = self.value_branchs[i](v)
+                else:
+                    v = F.avg_pool2d(v, kernel_size=2, stride=2)
+
+        msg = self.py_att(queries, keys, values).contiguous().view(B, -1, C)
+        x = self.proj(msg)
+        x = self.proj_drop(x)
+
+        return x
+
+    def flops(self, N):
+        # calculate flops for 1 window with token length of N
+        flops = 0
+        # qkv = self.qkv(x)
+        flops += N * self.dim * 3 * self.dim
+        # attn = (q @ k.transpose(-2, -1))
+        flops += self.num_heads * N * (self.dim // self.num_heads) * N
+        #  x = (attn @ v)
+        flops += self.num_heads * N * N * (self.dim // self.num_heads)
+        # x = self.proj(x)
+        flops += N * self.dim * self.dim
+        return flops
+
+if __name__ == '__main__':
+    dim = 768
+    num_heads = 12
+    H = W = 14
+    B = 64
+
+    # special for QTAttention
+    sr_ratio = 2
+    attn_type = "B"
+    from utils import measure_flops_params, measure_throughput_cpu, measure_throughput_gpu
+    cpu = True
+
+    if cpu:
+        model = QTAttention(dim, num_heads=num_heads, qkv_bias=True, qk_scale=None, sr_ratio=sr_ratio,
+                            attn_type=attn_type)
+        x = torch.randn(1, H * W, dim)
+        measure_flops_params(model, x)
+        measure_throughput_cpu(model)
+    else:
+        model = QTAttention(dim, num_heads=num_heads, qkv_bias=True, qk_scale=None, sr_ratio=sr_ratio,
+                            attn_type=attn_type, cpu=cpu)
+        x = torch.randn(1, H * W, dim)
+        measure_flops_params(model, x)
+        measure_throughput_gpu(model)
