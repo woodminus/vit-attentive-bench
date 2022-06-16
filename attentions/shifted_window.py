@@ -11,4 +11,9 @@ import numpy as np
 from timm.models.layers import trunc_normal_
 
 class ShiftedWindowAttention(nn.Module):
-    r""" Window based multi-head self attention (W-MSA) module with re
+    r""" Window based multi-head self attention (W-MSA) module with relative position bias.
+    It supports both of shifted and non-shifted window.
+
+    Args:
+        dim (int): Number of input channels.
+        window_size (tuple[int]): The height and w
