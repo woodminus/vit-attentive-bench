@@ -16,4 +16,6 @@ class ShiftedWindowAttention(nn.Module):
 
     Args:
         dim (int): Number of input channels.
-        window_size (tuple[int]): The height and w
+        window_size (tuple[int]): The height and width of the window.
+        num_heads (int): Number of attention heads.
+        qkv_bias (bool, optional):  If True, add a learnable bias to query, key, value. Defaul
