@@ -29,4 +29,10 @@ class ShiftedWindowAttention(nn.Module):
 
         super().__init__()
         self.dim = dim
-        self.window_size = window_size  # Wh,
+        self.window_size = window_size  # Wh, Ww
+        self.num_heads = num_heads
+        head_dim = dim // num_heads
+        self.scale = qk_scale or head_dim ** -0.5
+        self.shift_size = shift_size
+
+        self.qkv =
