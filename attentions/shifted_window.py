@@ -25,4 +25,8 @@ class ShiftedWindowAttention(nn.Module):
         shfit_size: The size of window shifting
     """
 
-    def __init__(self, dim, num_heads, qkv_bias=True, q
+    def __init__(self, dim, num_heads, qkv_bias=True, qk_scale=None, attn_drop=0., proj_drop=0., shift_size=0, window_size=7, use_rel_pos=True):
+
+        super().__init__()
+        self.dim = dim
+        self.window_size = window_size  # Wh,
