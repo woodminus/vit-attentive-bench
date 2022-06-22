@@ -35,4 +35,10 @@ class ShiftedWindowAttention(nn.Module):
         self.scale = qk_scale or head_dim ** -0.5
         self.shift_size = shift_size
 
-        self.qkv =
+        self.qkv = nn.Linear(dim, dim * 3, bias=qkv_bias)
+        self.attn_drop = nn.Dropout(attn_drop)
+        self.proj = nn.Linear(dim, dim)
+        self.proj_drop = nn.Dropout(proj_drop)
+
+
+   
