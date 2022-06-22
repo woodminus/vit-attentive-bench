@@ -41,4 +41,9 @@ class ShiftedWindowAttention(nn.Module):
         self.proj_drop = nn.Dropout(proj_drop)
 
 
-   
+        self.softmax = nn.Softmax(dim=-1)
+
+        self.use_rel_pos = use_rel_pos
+        if use_rel_pos:
+            # define a parameter table of relative position bias
+            se
