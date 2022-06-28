@@ -46,4 +46,5 @@ class ShiftedWindowAttention(nn.Module):
         self.use_rel_pos = use_rel_pos
         if use_rel_pos:
             # define a parameter table of relative position bias
-            se
+            self.relative_position_bias_table = nn.Parameter(
+                torch.zeros((2 * window_size - 1) * (2 * window_size - 1), num_heads))  # 2*Wh-1 * 2*Ww-1, nH
