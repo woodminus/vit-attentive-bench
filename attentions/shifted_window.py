@@ -60,4 +60,11 @@ class ShiftedWindowAttention(nn.Module):
             relative_coords[:, :, 1] += self.window_size - 1
             relative_coords[:, :, 0] *= 2 * self.window_size - 1
             relative_position_index = relative_coords.sum(-1)  # Wh*Ww, Wh*Ww
-            self.register_buffer("relative_position_ind
+            self.register_buffer("relative_position_index", relative_position_index)
+            trunc_normal_(self.relative_position_bias_table, std=.02)
+
+
+
+    def get_attn_mask(self, x, H, W):
+        # calculate attention mask for SW-MSA
+        Hp = int(np.c
