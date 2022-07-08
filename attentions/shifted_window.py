@@ -67,4 +67,7 @@ class ShiftedWindowAttention(nn.Module):
 
     def get_attn_mask(self, x, H, W):
         # calculate attention mask for SW-MSA
-        Hp = int(np.c
+        Hp = int(np.ceil(H / self.window_size)) * self.window_size
+        Wp = int(np.ceil(W / self.window_size)) * self.window_size
+        img_mask = torch.zeros((1, Hp, Wp, 1), device=x.device)  # 1 Hp Wp 1
+        
