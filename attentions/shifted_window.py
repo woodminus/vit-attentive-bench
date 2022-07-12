@@ -78,4 +78,9 @@ class ShiftedWindowAttention(nn.Module):
                     slice(-self.shift_size, None))
         cnt = 0
         for h in h_slices:
-            for w 
+            for w in w_slices:
+                img_mask[:, h, w, :] = cnt
+                cnt += 1
+
+        mask_windows = window_partition(img_mask, self.window_size)  # nW, window_size, window_size, 1
+     
