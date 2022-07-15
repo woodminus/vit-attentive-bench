@@ -85,4 +85,11 @@ class ShiftedWindowAttention(nn.Module):
         mask_windows = window_partition(img_mask, self.window_size)  # nW, window_size, window_size, 1
         mask_windows = mask_windows.view(-1, self.window_size * self.window_size)
         attn_mask = mask_windows.unsqueeze(1) - mask_windows.unsqueeze(2)
-        attn_mask = attn_mask.masked_fill(at
+        attn_mask = attn_mask.masked_fill(attn_mask != 0, float(-100.0)).masked_fill(attn_mask == 0, float(0.0))
+        return attn_mask
+
+
+    def forward(self, x, H=14, W=14):
+        """
+        Args:
+            x: i
