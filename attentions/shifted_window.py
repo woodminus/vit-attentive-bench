@@ -92,4 +92,8 @@ class ShiftedWindowAttention(nn.Module):
     def forward(self, x, H=14, W=14):
         """
         Args:
-            x: i
+            x: input features with shape of (num_windows*B, N, C)
+            mask: (0/-inf) mask with shape of (num_windows, Wh*Ww, Wh*Ww) or None
+        """
+
+        # calculate attention m
