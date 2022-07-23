@@ -103,4 +103,8 @@ class ShiftedWindowAttention(nn.Module):
         B, L, C = x.shape
         x = x.view(B, H, W, C)
 
-        # pad feature maps to multiples of windo
+        # pad feature maps to multiples of window size
+        pad_l = pad_t = 0
+        pad_r = (self.window_size - W % self.window_size) % self.window_size
+        pad_b = (self.window_size - H % self.window_size) % self.window_size
+        x = F.pad
