@@ -96,4 +96,11 @@ class ShiftedWindowAttention(nn.Module):
             mask: (0/-inf) mask with shape of (num_windows, Wh*Ww, Wh*Ww) or None
         """
 
-        # calculate attention m
+        # calculate attention mask for SW-MSA
+        mask_matrix = self.get_attn_mask(x, H, W)
+
+        # shift window
+        B, L, C = x.shape
+        x = x.view(B, H, W, C)
+
+        # pad feature maps to multiples of windo
