@@ -112,4 +112,11 @@ class ShiftedWindowAttention(nn.Module):
 
         # cyclic shift
         if self.shift_size > 0:
-            x = torch.roll(x, shifts=(-self.shift_s
+            x = torch.roll(x, shifts=(-self.shift_size, -self.shift_size), dims=(1, 2))
+            attn_mask = mask_matrix
+        else:
+            x = x
+            attn_mask = None
+
+        # partition windows
+        x = wind
