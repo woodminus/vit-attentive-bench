@@ -119,4 +119,8 @@ class ShiftedWindowAttention(nn.Module):
             attn_mask = None
 
         # partition windows
-        x = wind
+        x = window_partition(x, self.window_size)  # nW*B, window_size, window_size, C
+        x = x.view(-1, self.window_size * self.window_size, C)  # nW*B, window_size*window_size, C
+
+
+        # window attention
