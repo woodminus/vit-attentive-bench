@@ -124,3 +124,6 @@ class ShiftedWindowAttention(nn.Module):
 
 
         # window attention
+        B_, N, _ = x.shape
+        qkv = self.qkv(x).reshape(B_, N, 3, self.num_heads, C // self.num_heads).permute(2, 0, 3, 1, 4)
+        q, k, v = qkv[0], qkv[1], qkv[2]  # make torc
