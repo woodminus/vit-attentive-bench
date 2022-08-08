@@ -132,4 +132,5 @@ class ShiftedWindowAttention(nn.Module):
         attn = (q @ k.transpose(-2, -1))
 
         if self.use_rel_pos:
-            relative_positi
+            relative_position_bias = self.relative_position_bias_table[self.relative_position_index.view(-1)].view(
+                self.window_size * self.window_size, self.window_size * self.window_size, -1)  # W
