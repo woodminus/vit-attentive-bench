@@ -138,4 +138,7 @@ class ShiftedWindowAttention(nn.Module):
             attn = attn + relative_position_bias.unsqueeze(0)
 
 
-        if attn_mas
+        if attn_mask is not None:
+            nW = attn_mask.shape[0]
+            attn = attn.view(B_ // nW, nW, self.num_heads, N, N) + attn_mask.unsqueeze(1).unsqueeze(0)
+            attn = attn.
