@@ -141,4 +141,11 @@ class ShiftedWindowAttention(nn.Module):
         if attn_mask is not None:
             nW = attn_mask.shape[0]
             attn = attn.view(B_ // nW, nW, self.num_heads, N, N) + attn_mask.unsqueeze(1).unsqueeze(0)
-            attn = attn.
+            attn = attn.view(-1, self.num_heads, N, N)
+            attn = self.softmax(attn)
+        else:
+            attn = self.softmax(attn)
+
+        attn = self.attn_drop(attn)
+
+   
