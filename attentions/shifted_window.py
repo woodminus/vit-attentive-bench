@@ -154,4 +154,8 @@ class ShiftedWindowAttention(nn.Module):
 
         # merge windows
         x = x.view(-1, self.window_size, self.window_size, C)
-        shifte
+        shifted_x = window_reverse(x, self.window_size, Hp, Wp)  # B H' W' C
+
+        # reverse cyclic shift
+        if self.shift_size > 0:
+            x = torch.roll(shifte
