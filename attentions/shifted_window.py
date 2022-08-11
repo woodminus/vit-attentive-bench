@@ -148,4 +148,10 @@ class ShiftedWindowAttention(nn.Module):
 
         attn = self.attn_drop(attn)
 
-   
+        x = (attn @ v).transpose(1, 2).reshape(B_, N, C)
+        x = self.proj(x)
+        x = self.proj_drop(x)
+
+        # merge windows
+        x = x.view(-1, self.window_size, self.window_size, C)
+        shifte
