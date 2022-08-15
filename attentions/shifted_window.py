@@ -170,4 +170,9 @@ class ShiftedWindowAttention(nn.Module):
     def extra_repr(self) -> str:
         return f'dim={self.dim}, window_size={self.window_size}, num_heads={self.num_heads}'
 
-    def flop
+    def flops(self, N):
+        # calculate flops for 1 window with token length of N
+        flops = 0
+        # qkv = self.qkv(x)
+        flops += N * self.dim * 3 * self.dim
+        # attn =
