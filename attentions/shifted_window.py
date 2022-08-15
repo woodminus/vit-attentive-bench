@@ -163,4 +163,11 @@ class ShiftedWindowAttention(nn.Module):
             x = shifted_x
 
         if pad_r > 0 or pad_b > 0:
-            x = x[:, :H, :W, :
+            x = x[:, :H, :W, :].contiguous()
+
+        return x.view(B, H * W, C)
+
+    def extra_repr(self) -> str:
+        return f'dim={self.dim}, window_size={self.window_size}, num_heads={self.num_heads}'
+
+    def flop
