@@ -178,4 +178,13 @@ class ShiftedWindowAttention(nn.Module):
         # attn = (q @ k.transpose(-2, -1))
         flops += self.num_heads * N * (self.dim // self.num_heads) * N
         #  x = (attn @ v)
-        flops += self.num_heads * N * N * (self
+        flops += self.num_heads * N * N * (self.dim // self.num_heads)
+        # x = self.proj(x)
+        flops += N * self.dim * self.dim
+        return flops
+
+
+if __name__ == '__main__':
+    dim = 768
+    num_heads = 12
+    H =
