@@ -175,4 +175,7 @@ class ShiftedWindowAttention(nn.Module):
         flops = 0
         # qkv = self.qkv(x)
         flops += N * self.dim * 3 * self.dim
-        # attn =
+        # attn = (q @ k.transpose(-2, -1))
+        flops += self.num_heads * N * (self.dim // self.num_heads) * N
+        #  x = (attn @ v)
+        flops += self.num_heads * N * N * (self
