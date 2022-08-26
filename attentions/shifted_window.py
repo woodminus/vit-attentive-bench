@@ -193,4 +193,9 @@ if __name__ == '__main__':
     shift_size = 3
     window_size = 7
 
-    model = ShiftedWindowAttention(dim=dim, num_heads=num_heads, qkv_bias=True, shift_size=
+    model = ShiftedWindowAttention(dim=dim, num_heads=num_heads, qkv_bias=True, shift_size=shift_size, window_size=window_size, use_rel_pos=False)
+
+    from utils import measure_flops_params, measure_throughput_cpu, measure_throughput_gpu
+
+    x = torch.randn(1, H * W, dim)
+    measure_flops_p
