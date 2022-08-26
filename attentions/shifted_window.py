@@ -187,4 +187,10 @@ class ShiftedWindowAttention(nn.Module):
 if __name__ == '__main__':
     dim = 768
     num_heads = 12
-    H =
+    H = W = 14
+
+    # special for shifted window attention
+    shift_size = 3
+    window_size = 7
+
+    model = ShiftedWindowAttention(dim=dim, num_heads=num_heads, qkv_bias=True, shift_size=
