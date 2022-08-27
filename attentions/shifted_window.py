@@ -198,4 +198,6 @@ if __name__ == '__main__':
     from utils import measure_flops_params, measure_throughput_cpu, measure_throughput_gpu
 
     x = torch.randn(1, H * W, dim)
-    measure_flops_p
+    measure_flops_params(model, x)
+    measure_throughput_cpu(model)
+    measure_throughput_gpu(model)
