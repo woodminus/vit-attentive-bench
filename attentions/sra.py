@@ -31,4 +31,9 @@ class SRAttention(nn.Module):
 
         self.sr_ratio = sr_ratio
         if sr_ratio > 1:
- 
+            self.sr = nn.Conv2d(dim, dim, kernel_size=sr_ratio, stride=sr_ratio)
+            self.norm = nn.LayerNorm(dim)
+
+    def forward(self, x, H=14, W=14):
+        B, N, C = x.shape
+        q 
