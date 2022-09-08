@@ -36,4 +36,8 @@ class SRAttention(nn.Module):
 
     def forward(self, x, H=14, W=14):
         B, N, C = x.shape
-        q 
+        q = self.q(x).reshape(B, N, self.num_heads, C // self.num_heads).permute(0, 2, 1, 3)
+
+        if self.sr_ratio > 1:
+            x_ = x.permute(0, 2, 1).reshape(B, C, H, W)
+            x_ = self.
