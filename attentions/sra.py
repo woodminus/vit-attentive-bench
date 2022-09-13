@@ -52,4 +52,13 @@ class SRAttention(nn.Module):
         attn = self.attn_drop(attn)
 
         x = (attn @ v).transpose(1, 2).reshape(B, N, C)
-        x = self.
+        x = self.proj(x)
+        x = self.proj_drop(x)
+
+        return x
+
+    def flops(self, N):
+        flops = 0
+        # q
+        flops += N * self.dim * self.dim
+        H = int(N ** 0
