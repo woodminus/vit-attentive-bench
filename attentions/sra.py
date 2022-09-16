@@ -61,4 +61,8 @@ class SRAttention(nn.Module):
         flops = 0
         # q
         flops += N * self.dim * self.dim
-        H = int(N ** 0
+        H = int(N ** 0.5)
+        kv_len = (H // self.sr_ratio) ** 2
+        # spatial reduction
+        flops += conv_flops(self.sr_ratio, self.dim, self.dim, self.sr_ratio, 0, H)
+        # n
