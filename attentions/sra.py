@@ -71,4 +71,8 @@ class SRAttention(nn.Module):
         # kv
         flops += kv_len * self.dim * self.dim * 2
         # attn = (q @ k.transpose(-2, -1))
-        flops += self.num_heads * N * (
+        flops += self.num_heads * N * (self.dim // self.num_heads) * kv_len
+        #  x = (attn @ v)
+        flops += self.num_heads * N * kv_len * (self.dim // self.num_heads)
+        # x = self.proj(x)
+        fl
