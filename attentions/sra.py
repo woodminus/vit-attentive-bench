@@ -75,4 +75,16 @@ class SRAttention(nn.Module):
         #  x = (attn @ v)
         flops += self.num_heads * N * kv_len * (self.dim // self.num_heads)
         # x = self.proj(x)
-        fl
+        flops += N * self.dim * self.dim
+        return flops
+
+if __name__ == '__main__':
+    dim = 768
+    num_heads = 12
+    H = W = 14
+    B = 128
+
+    # special
+    sr_ratio = 2
+
+    model = SRAtte
