@@ -87,4 +87,8 @@ if __name__ == '__main__':
     # special
     sr_ratio = 2
 
-    model = SRAtte
+    model = SRAttention(dim=dim, num_heads=num_heads, qkv_bias=True, sr_ratio=sr_ratio)
+
+    from utils import measure_flops_params, measure_throughput_cpu, measure_throughput_gpu
+
+    x = 
