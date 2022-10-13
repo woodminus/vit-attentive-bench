@@ -22,4 +22,11 @@ def measure_throughput_gpu(model):
     print(f"throughput averaged with 30 times")
     torch.cuda.synchronize()
     tic1 = time.time()
-    for 
+    for i in range(30):
+        model(x)
+    torch.cuda.synchronize()
+    tic2 = time.time()
+    print(f"batch_size {B} throughput on GPU {int(30 * B / (tic2 - tic1))}")
+
+
+def measure_thro
