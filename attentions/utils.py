@@ -14,4 +14,12 @@ def measure_flops_params(model, x):
 
 
 def measure_throughput_gpu(model):
-    H = W = 1
+    H = W = 14
+    B = 64
+    x = torch.randn(B, H*W, model.dim).cuda()
+
+    model = model.cuda()
+    print(f"throughput averaged with 30 times")
+    torch.cuda.synchronize()
+    tic1 = time.time()
+    for 
