@@ -45,4 +45,10 @@ def measure_throughput_cpu(model):
 def window_partition(x, window_size):
     """
     Args:
-        x: (B, 
+        x: (B, H, W, C)
+        window_size (int): window size
+    Returns:
+        windows: (num_windows*B, window_size, window_size, C)
+    """
+    B, H, W, C = x.shape
+    x = x.view(B, H // window_size, window_size, 
