@@ -35,4 +35,14 @@ def measure_throughput_cpu(model):
     x = torch.randn(B, H*W, model.dim)
     print(f"throughput averaged with 30 times")
     tic1 = time.time()
-    for i in range(30)
+    for i in range(30):
+        model(x)
+    tic2 = time.time()
+    print(f"batch_size {B} throughput on CPU {int(30 * B / (tic2 - tic1))}")
+
+
+
+def window_partition(x, window_size):
+    """
+    Args:
+        x: (B, 
