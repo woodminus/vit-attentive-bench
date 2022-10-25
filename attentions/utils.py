@@ -55,4 +55,10 @@ def window_partition(x, window_size):
     windows = x.permute(0, 1, 3, 2, 4, 5).contiguous().view(-1, window_size, window_size, C)
     return windows
 
-def get_relative_position_index(q_windows, k_window
+def get_relative_position_index(q_windows, k_windows):
+    """
+    Args:
+        q_windows: tuple (query_window_height, query_window_width)
+        k_windows: tuple (key_window_height, key_window_width)
+    Returns:
+        relative_position_index
