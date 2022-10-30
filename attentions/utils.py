@@ -68,4 +68,8 @@ def get_relative_position_index(q_windows, k_windows):
     coords_w_q = torch.arange(q_windows[1])
     coords_q = torch.stack(torch.meshgrid([coords_h_q, coords_w_q]))  # 2, Wh_q, Ww_q
 
-    coords_h_k = torch.aran
+    coords_h_k = torch.arange(k_windows[0])
+    coords_w_k = torch.arange(k_windows[1])
+    coords_k = torch.stack(torch.meshgrid([coords_h_k, coords_w_k]))  # 2, Wh, Ww
+
+    coords_flatten_q = torch.flatten(coords_q, 1)  
