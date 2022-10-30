@@ -64,4 +64,8 @@ def get_relative_position_index(q_windows, k_windows):
         relative_position_index: query_window_height*query_window_width, key_window_height*key_window_width
     """
     # get pair-wise relative position index for each token inside the window
-    coords_h_q = torch.arange(
+    coords_h_q = torch.arange(q_windows[0])
+    coords_w_q = torch.arange(q_windows[1])
+    coords_q = torch.stack(torch.meshgrid([coords_h_q, coords_w_q]))  # 2, Wh_q, Ww_q
+
+    coords_h_k = torch.aran
