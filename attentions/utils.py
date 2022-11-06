@@ -79,4 +79,6 @@ def get_relative_position_index(q_windows, k_windows):
     relative_coords = relative_coords.permute(1, 2, 0).contiguous()  # Wh_q*Ww_q, Wh_k*Ww_k, 2
     relative_coords[:, :, 0] += k_windows[0] - 1  # shift to start from 0
     relative_coords[:, :, 1] += k_windows[1] - 1
- 
+    relative_coords[:, :, 0] *= (q_windows[1] + k_windows[1]) - 1
+    relative_position_index = relative_coords.sum(-1)  #  Wh_q*Ww_q, Wh_k*Ww_k
+    return relative_position_index
