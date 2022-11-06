@@ -76,4 +76,7 @@ def get_relative_position_index(q_windows, k_windows):
     coords_flatten_k = torch.flatten(coords_k, 1)  # 2, Wh_k*Ww_k
 
     relative_coords = coords_flatten_q[:, :, None] - coords_flatten_k[:, None, :]  # 2, Wh_q*Ww_q, Wh_k*Ww_k
-    relative_coords = relat
+    relative_coords = relative_coords.permute(1, 2, 0).contiguous()  # Wh_q*Ww_q, Wh_k*Ww_k, 2
+    relative_coords[:, :, 0] += k_windows[0] - 1  # shift to start from 0
+    relative_coords[:, :, 1] += k_windows[1] - 1
+ 
