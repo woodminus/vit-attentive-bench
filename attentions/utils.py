@@ -107,4 +107,9 @@ def window_partition_noreshape(x, window_size):
         windows: (B, num_windows_h, num_windows_w, window_size, window_size, C)
     """
     B, H, W, C = x.shape
-    x = x.view(B
+    x = x.view(B, H // window_size, window_size, W // window_size, window_size, C)
+    windows = x.permute(0, 1, 3, 2, 4, 5).contiguous()
+    return windows
+
+
+def conv_flops(H, W, in_channels, out_channels
