@@ -101,4 +101,10 @@ def window_reverse(windows, window_size, H, W):
 def window_partition_noreshape(x, window_size):
     """
     Args:
-        x:
+        x: (B, H, W, C)
+        window_size (int): window size
+    Returns:
+        windows: (B, num_windows_h, num_windows_w, window_size, window_size, C)
+    """
+    B, H, W, C = x.shape
+    x = x.view(B
