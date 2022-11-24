@@ -112,4 +112,10 @@ def window_partition_noreshape(x, window_size):
     return windows
 
 
-def conv_flops(H, W, in_channels, out_channels
+def conv_flops(H, W, in_channels, out_channels, kernel_size, stride=1, padding=0, dilation=1, groups=1, bias=True):
+    batch_size = 1
+    output_dims = [H, W]
+
+    kernel_dims = list(kernel_size)
+    in_channels = in_channels
+    out_c
