@@ -118,4 +118,9 @@ def conv_flops(H, W, in_channels, out_channels, kernel_size, stride=1, padding=0
 
     kernel_dims = list(kernel_size)
     in_channels = in_channels
-    out_c
+    out_channels = out_channels
+    groups = groups
+
+    filters_per_channel = out_channels // groups
+    conv_per_position_flops = int(np.prod(kernel_dims)) * \
+                              in_channels * filte
