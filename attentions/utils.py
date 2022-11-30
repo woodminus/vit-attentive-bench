@@ -123,4 +123,12 @@ def conv_flops(H, W, in_channels, out_channels, kernel_size, stride=1, padding=0
 
     filters_per_channel = out_channels // groups
     conv_per_position_flops = int(np.prod(kernel_dims)) * \
-                              in_channels * filte
+                              in_channels * filters_per_channel
+
+    active_elements_count = batch_size * int(np.prod(output_dims))
+
+    overall_conv_flops = conv_per_position_flops * active_elements_count
+
+    bias_flops = 0
+
+ 
