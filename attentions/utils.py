@@ -131,4 +131,9 @@ def conv_flops(H, W, in_channels, out_channels, kernel_size, stride=1, padding=0
 
     bias_flops = 0
 
- 
+    if bias is not None:
+        bias_flops = out_channels * active_elements_count
+
+    overall_flops = overall_conv_flops + bias_flops
+
+    return int(overall_flops)
