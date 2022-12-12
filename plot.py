@@ -13,4 +13,10 @@ def plot_cpu():
                 line_count += 1
             else:
                 data[row[0]] = {
-                    'params': row
+                    'params': row[1],
+                    'flops': row[2],
+                    'cpu': int(row[3]),
+                    'gpu': int(row[4]),
+                }
+
+    gpu_speeds = np.array([v['c
