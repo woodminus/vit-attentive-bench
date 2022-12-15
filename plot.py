@@ -19,4 +19,11 @@ def plot_cpu():
                     'gpu': int(row[4]),
                 }
 
-    gpu_speeds = np.array([v['c
+    gpu_speeds = np.array([v['cpu'] for k, v in data.items()])
+    names = np.array(list(data.keys()))
+
+    indices = np.argsort(gpu_speeds)[::-1]
+    gpu_speeds = gpu_speeds[indices]
+    names = names[indices]
+
+    fig, ax 
