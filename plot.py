@@ -26,4 +26,8 @@ def plot_cpu():
     gpu_speeds = gpu_speeds[indices]
     names = names[indices]
 
-    fig, ax 
+    fig, ax = plt.subplots(figsize=(8, 5), dpi=30)
+    bars = ax.bar(names, gpu_speeds, width=0.6, color='#669DB3FF')
+    ax.bar_label(bars)
+    ax.set_axisbelow(True)
+    fig.autof
