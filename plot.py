@@ -30,4 +30,10 @@ def plot_cpu():
     bars = ax.bar(names, gpu_speeds, width=0.6, color='#669DB3FF')
     ax.bar_label(bars)
     ax.set_axisbelow(True)
-    fig.autof
+    fig.autofmt_xdate(rotation=45)
+    plt.subplots_adjust(bottom=0.3)
+    plt.ylabel('Throughput (imgs/s)')
+    plt.grid(linewidth=0.3, axis='y', linestyle='--')
+
+    plt.ylim([0, 1100])
+    plt.titl
