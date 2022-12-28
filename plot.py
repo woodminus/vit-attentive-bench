@@ -36,4 +36,10 @@ def plot_cpu():
     plt.grid(linewidth=0.3, axis='y', linestyle='--')
 
     plt.ylim([0, 1100])
-    plt.titl
+    plt.title('Intel® Core™ i9-10900X CPU @ 3.70GHz')
+    plt.savefig('/data1/vit-attention-projects/vit-attention-benchmark/res_cpu.pdf')
+    print('..')
+
+def plot_gpu():
+    data = {}
+    with open('results/attention_b
