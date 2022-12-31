@@ -42,4 +42,8 @@ def plot_cpu():
 
 def plot_gpu():
     data = {}
-    with open('results/attention_b
+    with open('results/attention_benchmark.csv') as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        line_count = 0
+        for row in csv_reader:
+            if line_count == 0:
