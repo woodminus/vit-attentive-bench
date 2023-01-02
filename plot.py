@@ -52,3 +52,9 @@ def plot_gpu():
             else:
                 data[row[0]] = {
                     'params': row[1],
+                    'flops': row[2],
+                    'cpu': row[3],
+                    'gpu': int(row[4]),
+                }
+
+    gpu_speeds = np.array([v['gpu'] for k, v in data.
