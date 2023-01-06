@@ -57,4 +57,11 @@ def plot_gpu():
                     'gpu': int(row[4]),
                 }
 
-    gpu_speeds = np.array([v['gpu'] for k, v in data.
+    gpu_speeds = np.array([v['gpu'] for k, v in data.items()])
+    names = np.array(list(data.keys()))
+
+    indices = np.argsort(gpu_speeds)[::-1]
+    gpu_speeds = gpu_speeds[indices]
+    names = names[indices]
+
+    # fig, ax = plt.subplots(figs
