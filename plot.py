@@ -64,4 +64,9 @@ def plot_gpu():
     gpu_speeds = gpu_speeds[indices]
     names = names[indices]
 
-    # fig, ax = plt.subplots(figs
+    # fig, ax = plt.subplots(figsize=(6, 5), dpi=30)
+    fig, ax = plt.subplots(figsize=(8, 5), dpi=30)
+    bars = ax.bar(names, gpu_speeds, width=0.6, color='#669DB3FF')
+    ax.bar_label(bars)
+    ax.set_axisbelow(True)
+    fig
