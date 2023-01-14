@@ -74,4 +74,11 @@ def plot_gpu():
     plt.ylabel('Throughput (imgs/s)')
     plt.grid(linewidth=0.3, axis='y', linestyle='--')
 
-    plt.yl
+    plt.ylim([2500, 5300])
+    plt.title('NVIDIA GeForce RTX 3090')
+    plt.savefig('/data1/vit-attention-projects/vit-attention-benchmark/res_gpu.pdf')
+    print('..')
+
+
+if __name__ == '__main__':
+    plo
