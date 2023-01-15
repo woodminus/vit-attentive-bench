@@ -81,4 +81,5 @@ def plot_gpu():
 
 
 if __name__ == '__main__':
-    plo
+    plot_cpu()
+    plot_gpu()
