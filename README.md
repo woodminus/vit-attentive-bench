@@ -22,4 +22,17 @@ This repository, maintained by woodminus, is a comprehensive benchmarking of var
 ### Setting
 
 - input: 14 x 14 = 196 tokens (1/16 scale feature maps in common ImageNet-1K training)
-- batc
+- batch size for speed testing (images/s): 64
+- embedding dimension:768
+- number of heads: 12
+
+### Testing
+
+For example, to test HiLo attention,
+
+```bash
+cd attentions/
+python hilo.py
+```
+
+> By default, the script wi
