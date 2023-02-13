@@ -35,4 +35,11 @@ cd attentions/
 python hilo.py
 ```
 
-> By default, the script wi
+> By default, the script will test models on both CPU and GPU. FLOPs is measured by fvcore. You may want to edit the source file as needed.
+
+Outputs:
+
+```bash
+Number of Params: 2.2 M
+FLOPs = 298.3 M
+throughput averaged with 
