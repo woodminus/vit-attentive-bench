@@ -42,4 +42,12 @@ Outputs:
 ```bash
 Number of Params: 2.2 M
 FLOPs = 298.3 M
-throughput averaged with 
+throughput averaged with 30 times
+batch_size 64 throughput on CPU 1029
+throughput averaged with 30 times
+batch_size 64 throughput on GPU 5104
+```
+
+### Supported Attentions
+
+- Numerous attention mechanisms along with their
