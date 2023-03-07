@@ -56,4 +56,6 @@ batch_size 64 throughput on GPU 5104
 
 | Name | Params (M) | FLOPs (M) | CPU Speed | GPU Speed | Demo |
 
-- Various attention mechanisms along with their respective c
+- Various attention mechanisms along with their respective computational parameters and speed.
+
+**Note:** Each method has its own hyperparameters. For a fair comparison on 1/16 scale feature maps, all methods in the above table adopt the
