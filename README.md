@@ -50,4 +50,10 @@ batch_size 64 throughput on GPU 5104
 
 ### Supported Attentions
 
-- Numerous attention mechanisms along with their
+- Numerous attention mechanisms along with their respective papers and codes.
+
+### Single Attention Layer Benchmark
+
+| Name | Params (M) | FLOPs (M) | CPU Speed | GPU Speed | Demo |
+
+- Various attention mechanisms along with their respective c
