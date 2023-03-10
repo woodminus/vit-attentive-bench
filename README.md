@@ -58,4 +58,8 @@ batch_size 64 throughput on GPU 5104
 
 - Various attention mechanisms along with their respective computational parameters and speed.
 
-**Note:** Each method has its own hyperparameters. For a fair comparison on 1/16 scale feature maps, all methods in the above table adopt their default 1/16 scale settings, as shown in their released code repo. For example, when dealing with 1/16 scale feature maps, HiLo in LITv2 adopt a window size o
+**Note:** Each method has its own hyperparameters. For a fair comparison on 1/16 scale feature maps, all methods in the above table adopt their default 1/16 scale settings, as shown in their released code repo. For example, when dealing with 1/16 scale feature maps, HiLo in LITv2 adopt a window size of 2 and alpha of 0.9. Future works will consider more scales and memory benchmarking.
+
+## License
+
+This repository is released under the Apache 2.0 license as found in the [LICENSE](./LICENSE) file.
